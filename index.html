@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EXCHANGE — Specialty Coffee</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,72,400;0,72,500;0,72,600;1,72,400;1,72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+  :root{
+    --ink: #15120F;
+    --ink-2: #1D1914;
+    --paper: #EDE7DA;
+    --paper-2: #E2DBC9;
+    --copper: #9C6B3E;
+    --copper-bright: #C08A56;
+    --steel: #8A8F94;
+    --cream: #F3EFE6;
+    --charcoal: #201C17;
+    --line-on-dark: rgba(243,239,230,0.14);
+    --line-on-paper: rgba(32,28,23,0.16);
+    --serif: "Newsreader", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, sans-serif;
+    --mono: "IBM Plex Mono", "SF Mono", monospace;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--ink);
+    color:var(--cream);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
+  }
+
+  a{ color:inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  ::selection{ background:var(--copper); color:var(--ink); }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    background:rgba(21,18,15,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-on-dark);
+  }
+  nav{
+    max-width:1180px; margin:0 auto; padding:18px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{
+    font-family:var(--mono); font-size:15px; letter-spacing:0.14em;
+    font-weight:500; color:var(--cream);
+  }
+  .logo span{ color:var(--copper-bright); }
+  .navlinks{ display:flex; gap:36px; }
+  .navlinks a{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.12em;
+    color:var(--steel); text-transform:uppercase; transition:color .25s ease;
+  }
+  .navlinks a:hover, .navlinks a:focus-visible{ color:var(--cream); }
+  .status{
+    display:flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:0.1em;
+    color:var(--steel); text-transform:uppercase;
+  }
+  .dot{
+    width:6px; height:6px; border-radius:50%; background:#8FAE7C;
+    box-shadow:0 0 0 0 rgba(143,174,124,0.6);
+    animation:pulse 2.4s infinite;
+  }
+  @keyframes pulse{
+    0%{ box-shadow:0 0 0 0 rgba(143,174,124,0.5); }
+    70%{ box-shadow:0 0 0 6px rgba(143,174,124,0); }
+    100%{ box-shadow:0 0 0 0 rgba(143,174,124,0); }
+  }
+  .navtoggle{ display:none; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:180px 0 0 0;
+    position:relative;
+  }
+  .eyebrow{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:0.18em;
+    color:var(--copper-bright); text-transform:uppercase;
+    display:flex; align-items:center; gap:14px; margin-bottom:28px;
+  }
+  .eyebrow::before{
+    content:""; width:26px; height:1px; background:var(--copper);
+  }
+  .hero h1{
+    font-family:var(--serif); font-weight:500;
+    font-size:clamp(42px, 7vw, 92px); line-height:1.02;
+    letter-spacing:-0.01em; max-width:900px;
+  }
+  .hero h1 em{
+    font-style:italic; font-weight:400; color:var(--copper-bright);
+  }
+  .hero-sub{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    gap:40px; margin-top:44px; padding-bottom:64px;
+    border-bottom:1px solid var(--line-on-dark);
+    flex-wrap:wrap;
+  }
+  .hero-sub p{
+    max-width:380px; font-size:16px; line-height:1.6; color:#C9C3B6;
+  }
+  .hero-coord{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.08em;
+    color:var(--steel); text-align:right; line-height:1.8;
+    text-transform:uppercase;
+  }
+
+  /* ---------- TICKER ---------- */
+  .ticker-band{
+    background:var(--ink-2); border-bottom:1px solid var(--line-on-dark);
+    overflow:hidden; white-space:nowrap; padding:14px 0;
+  }
+  .ticker-track{
+    display:inline-flex; animation:scroll-left 38s linear infinite;
+  }
+  .ticker-band:hover .ticker-track{ animation-play-state:paused; }
+  @keyframes scroll-left{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+  .ticker-item{
+    font-family:var(--mono); font-size:12.5px; letter-spacing:0.04em;
+    color:var(--steel); display:inline-flex; align-items:center;
+    padding:0 28px; border-right:1px solid var(--line-on-dark);
+  }
+  .ticker-item b{ color:var(--cream); font-weight:500; margin-right:10px; }
+  .ticker-item .score{ color:#8FAE7C; margin-left:10px; }
+
+  /* ---------- SECTION SCAFFOLD ---------- */
+  section{ padding:120px 0; }
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end;
+    margin-bottom:64px; gap:24px; flex-wrap:wrap;
+  }
+  .section-index{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.14em;
+    color:var(--copper-bright); text-transform:uppercase; margin-bottom:14px;
+    display:block;
+  }
+  .section-head h2{
+    font-family:var(--serif); font-weight:500; font-size:clamp(30px,4vw,48px);
+    letter-spacing:-0.01em;
+  }
+  .section-head .desc{
+    max-width:320px; font-size:14.5px; line-height:1.65; color:var(--steel);
+  }
+  .reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+
+  /* ---------- INTRO (paper) ---------- */
+  .intro{ background:var(--paper); color:var(--charcoal); }
+  .intro .section-index{ color:var(--copper); }
+  .intro-grid{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:80px; align-items:start;
+  }
+  .intro-lead{
+    font-family:var(--serif); font-size:clamp(22px,2.6vw,30px);
+    line-height:1.5; font-weight:400;
+  }
+  .intro-lead em{ font-style:italic; color:var(--copper); }
+  .specs{ border-top:1px solid var(--line-on-paper); }
+  .spec-row{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:16px 0; border-bottom:1px solid var(--line-on-paper);
+  }
+  .spec-row .label{ font-size:14px; color:#5C564C; }
+  .spec-row .value{ font-family:var(--mono); font-size:14px; letter-spacing:0.03em; }
+
+  .intro-teaser{ margin-top:72px; padding-top:48px; border-top:1px solid var(--line-on-paper); }
+  .teaser-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:28px; gap:20px; flex-wrap:wrap; }
+  .teaser-top h3{ font-family:var(--serif); font-size:22px; font-weight:500; }
+  .teaser-top a{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.1em; color:var(--copper);
+    text-transform:uppercase; display:inline-flex; align-items:center; gap:6px; transition:gap .25s ease;
+    white-space:nowrap;
+  }
+  .teaser-top a:hover{ gap:11px; }
+  .teaser-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--line-on-paper); border:1px solid var(--line-on-paper);
+  }
+  .teaser-item{ background:var(--paper); padding:24px; }
+  .teaser-item .cat{
+    font-family:var(--mono); font-size:9.5px; letter-spacing:0.1em; color:var(--copper);
+    text-transform:uppercase; margin-bottom:10px; display:block;
+  }
+  .teaser-item h4{ font-family:var(--serif); font-size:18px; font-weight:500; margin-bottom:6px; }
+  .teaser-item .price{ font-family:var(--mono); font-size:13px; color:#5C564C; }
+
+  /* ---------- BEANS (dark) ---------- */
+  .beans{ background:var(--ink); }
+  .bean-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:1px;
+    background:var(--line-on-dark); border:1px solid var(--line-on-dark);
+  }
+  .bean-card{
+    background:var(--ink); padding:36px; transition:background .3s ease;
+  }
+  .bean-card:hover{ background:var(--ink-2); }
+  .bean-top{
+    display:flex; justify-content:space-between; align-items:flex-start;
+    margin-bottom:22px;
+  }
+  .bean-code{
+    font-family:var(--mono); font-size:12px; letter-spacing:0.1em;
+    color:var(--copper-bright); border:1px solid var(--copper); border-radius:2px;
+    padding:3px 8px;
+  }
+  .bean-score{ text-align:right; }
+  .bean-score .num{ font-family:var(--mono); font-size:20px; color:#8FAE7C; }
+  .bean-score .lbl{ font-family:var(--mono); font-size:9.5px; color:var(--steel); letter-spacing:0.1em; display:block; }
+  .bean-card h3{
+    font-family:var(--serif); font-size:26px; font-weight:500; margin-bottom:6px;
+  }
+  .bean-origin{ font-size:13.5px; color:var(--steel); margin-bottom:22px; }
+  .bean-meta{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:22px;
+    padding:16px 0; border-top:1px solid var(--line-on-dark); border-bottom:1px solid var(--line-on-dark);
+  }
+  .bean-meta div .k{ font-family:var(--mono); font-size:9.5px; color:var(--steel); letter-spacing:0.08em; text-transform:uppercase; display:block; margin-bottom:4px; }
+  .bean-meta div .v{ font-size:13.5px; color:var(--cream); }
+  .bean-notes{ font-size:14px; line-height:1.6; color:#C9C3B6; font-style:italic; font-family:var(--serif); }
+
+  /* ---------- MENU (paper) ---------- */
+  .menu{ background:var(--paper); color:var(--charcoal); }
+  .menu .section-index{ color:var(--copper); }
+  .menu-cols{ display:grid; grid-template-columns:1fr 1fr; gap:72px; }
+  .menu-cat-title{
+    font-family:var(--mono); font-size:11px; letter-spacing:0.14em;
+    color:var(--copper); text-transform:uppercase; margin-bottom:26px;
+    padding-bottom:14px; border-bottom:1px solid var(--line-on-paper);
+  }
+  .menu-item{ padding:16px 0; border-bottom:1px solid var(--line-on-paper); }
+  .menu-item-top{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+  .menu-item-top h4{ font-family:var(--serif); font-size:19px; font-weight:500; }
+  .menu-item-top .price{ font-family:var(--mono); font-size:15px; white-space:nowrap; }
+  .menu-item-spec{
+    font-family:var(--mono); font-size:11px; color:#847D6E; letter-spacing:0.03em;
+    margin-top:6px; text-transform:uppercase;
+  }
+  .menu-row{ margin-bottom:64px; }
+  .menu-row:last-child{ margin-bottom:0; }
+  .menu-addon{
+    margin-top:20px; font-family:var(--mono); font-size:11.5px; letter-spacing:0.04em;
+    color:var(--copper); text-transform:uppercase;
+  }
+
+  /* ---------- EVENTS (dark) ---------- */
+  .events{ background:var(--ink); }
+  .event-row{
+    display:grid; grid-template-columns:110px 1fr auto; gap:32px; align-items:center;
+    padding:28px 0; border-bottom:1px solid var(--line-on-dark);
+    transition:padding-left .3s ease;
+  }
+  .event-row:hover{ padding-left:12px; }
+  .event-row:first-child{ border-top:1px solid var(--line-on-dark); }
+  .event-date{
+    font-family:var(--mono); font-size:13px; color:var(--copper-bright); letter-spacing:0.05em;
+    line-height:1.5;
+  }
+  .event-date .day{ font-size:26px; color:var(--cream); display:block; }
+  .event-body h3{ font-family:var(--serif); font-size:22px; font-weight:500; margin-bottom:6px; }
+  .event-body p{ font-size:14px; color:var(--steel); max-width:460px; line-height:1.5; }
+  .event-time{
+    font-family:var(--mono); font-size:12px; color:var(--steel); text-align:right;
+    white-space:nowrap; letter-spacing:0.04em;
+  }
+
+  /* ---------- VISIT / FOOTER ---------- */
+  footer{ background:var(--ink-2); border-top:1px solid var(--line-on-dark); padding:80px 0 32px; }
+  .foot-grid{
+    display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:56px; margin-bottom:72px;
+  }
+  .foot-brand{ font-family:var(--serif); font-size:30px; font-style:italic; margin-bottom:16px; color:var(--cream); }
+  .foot-grid p{ font-size:14px; line-height:1.7; color:var(--steel); max-width:280px; }
+  .foot-h{ font-family:var(--mono); font-size:10.5px; letter-spacing:0.12em; color:var(--copper-bright); text-transform:uppercase; margin-bottom:16px; }
+  .foot-line{ font-size:14px; color:#C9C3B6; line-height:1.9; }
+  .foot-bottom{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-top:28px; border-top:1px solid var(--line-on-dark);
+    font-family:var(--mono); font-size:10.5px; color:var(--steel); letter-spacing:0.06em;
+    flex-wrap:wrap; gap:12px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 860px){
+    .navlinks{ display:none; }
+    .hero{ padding-top:150px; }
+    .hero-sub{ flex-direction:column; align-items:flex-start; }
+    .hero-coord{ text-align:left; }
+    .intro-grid{ grid-template-columns:1fr; gap:44px; }
+    .teaser-grid{ grid-template-columns:1fr; }
+    .bean-grid{ grid-template-columns:1fr; }
+    .menu-cols{ grid-template-columns:1fr; gap:48px; }
+    .event-row{ grid-template-columns:1fr; gap:10px; }
+    .event-time{ text-align:left; }
+    .foot-grid{ grid-template-columns:1fr; gap:40px; }
+    section{ padding:80px 0; }
+    .wrap{ padding:0 22px; }
+  }
+
+  a:focus-visible, button:focus-visible{
+    outline:2px solid var(--copper-bright); outline-offset:3px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">EX<span>—</span>CHANGE</div>
+    <div class="navlinks">
+      <a href="#intro">Intro</a>
+      <a href="#beans">Beans</a>
+      <a href="#menu">Menu</a>
+      <a href="#events">Events</a>
+      <a href="#visit">Visit</a>
+    </div>
+    <div class="status"><span class="dot"></span> Roasting Now</div>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Specialty Coffee・ROASTERY · Est. 2024</div>
+      <h1>Where coffee<br>becomes an<em> Exchange.</em></h1>
+      <div class="hero-sub">
+        <p>Every coffee has an origin, a value, and a story.
+        We bring them together in Bangkok — carefully sourced, 
+        precisely prepared, and made to be experienced.
+        </p>
+        <div class="hero-coord">
+          Open Daily · 08:00 – 17:00<br>
+          Si Phraya, Bangkok, Thailand<br>
+          <a href="https://share.google/vKKxasVf39pbEaNVw" target="_blank">Click to View on Google Maps</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker-band">
+    <div class="ticker-track" id="tickerTrack">
+      <!-- duplicated in JS for seamless loop -->
+    </div>
+  </div>
+
+  <section class="intro" id="intro">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="section-index">01 — Intro</span>
+          <h2>Come for the Coffee. <br> Stay for the Exchange.</h2>
+        </div>
+      </div>
+      <div class="intro-grid reveal">
+        <p class="intro-lead">We love coffee. And we love talking about it.
+        <br>We carefully select and prepare each coffee, but the experience doesn’t end with the cup.
+        <br>Sit at the bar. Taste something different. Ask us about the coffee. Stay for the conversation.
+        <br>Because the best coffee experiences are the ones you take part in.
+        </p>
+        <div class="specs">
+          <div class="spec-row"><span class="label">Cupping threshold</span><span class="value">84.0 PTS MIN</span></div>
+          <div class="spec-row"><span class="label">Espresso ratio</span><span class="value">1 : 2.0 · 25s</span></div>
+          <div class="spec-row"><span class="label">Filter ratio</span><span class="value">1 : 15 · 92°C</span></div>
+          <div class="spec-row"><span class="label">Water TDS</span><span class="value">125–150 PPM</span></div>
+          <div class="spec-row"><span class="label">Roast log entries</span><span class="value">4,812 BATCHES</span></div>
+        </div>
+      </div>
+
+      <div class="intro-teaser reveal">
+        <div class="teaser-top">
+          <h3>A few from the board</h3>
+          <a href="#menu">View full menu →</a>
+        </div>
+        <div class="teaser-grid">
+          <div class="teaser-item">
+            <span class="cat">Single Origin · Pour Over</span>
+            <h4>Myanmar Snow</h4>
+            <div class="price">120 THB</div>
+          </div>
+          <div class="teaser-item">
+            <span class="cat">Matcha</span>
+            <h4>Yuzu Matcha</h4>
+            <div class="price">120 THB</div>
+          </div>
+          <div class="teaser-item">
+            <span class="cat">Espresso based</span>
+            <h4>Flat White</h4>
+            <div class="price">75 THB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="beans" id="beans">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="section-index">02 — Listings</span>
+          <h2>Beans on the board</h2>
+        </div>
+        <p class="desc">Four lots currently listed. Each entry is re-cupped monthly; scores move, listings get delisted.</p>
+      </div>
+
+      <div class="bean-card">
+          <div class="bean-top">
+            <span class="bean-code">THA · HNY</span>
+            <div class="bean-score"><span class="num">90–120</span><span class="lbl">THB Range</span></div>
+          </div>
+          <h3>Thailand Black Honey</h3>
+          <div class="bean-origin">Single Origin · Light Roast</div>
+          <div class="bean-meta">
+            <div><span class="k">Americano</span><span class="v">90 THB</span></div>
+            <div><span class="k">Pour Over</span><span class="v">120 THB</span></div>
+            <div><span class="k">Process</span><span class="v">Black Honey</span></div>
+          </div>
+          <div class="bean-notes">Dried fruit, lemon, yellow sugar.</div>
+        </div>
+
+      <div class="bean-grid reveal">
+        <div class="bean-card">
+          <div class="bean-top">
+            <span class="bean-code">ETH · GUJ</span>
+            <div class="bean-score"><span class="num">100–130</span><span class="lbl">THB Range</span></div>
+          </div>
+          <h3>Ethiopia Oromina Guji</h3>
+          <div class="bean-origin">Single Origin · Light Roast</div>
+          <div class="bean-meta">
+            <div><span class="k">Americano</span><span class="v">100 THB</span></div>
+            <div><span class="k">Pour Over</span><span class="v">130 THB</span></div>
+            <div><span class="k">Process</span><span class="v">Washed</span></div>
+          </div>
+          <div class="bean-notes">White floral, raspberry, honey.</div>
+        </div>
+
+        
+
+        <div class="bean-card">
+          <div class="bean-top">
+            <span class="bean-code">MYA · SNW</span>
+            <div class="bean-score"><span class="num">90–120</span><span class="lbl">THB Range</span></div>
+          </div>
+          <h3>Myanmar Snow</h3>
+          <div class="bean-origin">Single Origin · Light Roast</div>
+          <div class="bean-meta">
+            <div><span class="k">Americano</span><span class="v">90 THB</span></div>
+            <div><span class="k">Pour Over</span><span class="v">120 THB</span></div>
+            <div><span class="k">Process</span><span class="v">Natural Sun-Dried</span></div>
+          </div>
+          <div class="bean-notes">Strawberry, orange, honey.</div>
+        </div>
+
+        <div class="bean-card">
+          <div class="bean-top">
+            <span class="bean-code">YUN · WSH</span>
+            <div class="bean-score"><span class="num">100–130</span><span class="lbl">THB Range</span></div>
+          </div>
+          <h3>Yunnan Fine Washed</h3>
+          <div class="bean-origin">Single Origin · Light Roast</div>
+          <div class="bean-meta">
+            <div><span class="k">Americano</span><span class="v">100 THB</span></div>
+            <div><span class="k">Pour Over</span><span class="v">130 THB</span></div>
+            <div><span class="k">Process</span><span class="v">Fine Washed</span></div>
+          </div>
+          <div class="bean-notes">Blue ginger flower, buddha's hand citrus.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu" id="menu">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="section-index">03 — Menu</span>
+          <h2>Fixed spec, every cup</h2>
+        </div>
+        <p class="desc">Full board, by category. Single-origin pour overs are listed above with process and notes.</p>
+      </div>
+
+      <div class="menu-row menu-cols reveal">
+        <div>
+          <div class="menu-cat-title">Black Coffee</div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Espresso</h4><span class="price">65 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Americano</h4><span class="price">70 THB</span></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="menu-cat-title">Home Brew Signature</div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Orange Americano</h4><span class="price">110 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Coconut Americano</h4><span class="price">110 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Yuzu Americano</h4><span class="price">110 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Cold Brew</h4><span class="price">110 THB</span></div>
+            <div class="menu-item-spec">Steeped for 15 Hours</div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Apple Brew</h4><span class="price">110 THB</span></div>
+            <div class="menu-item-spec">Apple + cold brew</div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Sunny Shot</h4><span class="price">110 THB</span></div>
+            <div class="menu-item-spec">Pineapple + espresso</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="menu-row menu-cols reveal">
+        <div>
+          <div class="menu-cat-title">Milk &amp; Classic</div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Latte</h4><span class="price">75 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Cappuccino</h4><span class="price">75 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Flat White</h4><span class="price">75 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Mocha</h4><span class="price">80 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Caramel Latte</h4><span class="price">80 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Spanish Latte</h4><span class="price">80 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Es-Yen</h4><span class="price">75 THB</span></div>
+          </div>
+          <div class="menu-addon">Add on — Oat milk · +30 THB</div>
+        </div>
+
+        <div>
+          <div class="menu-cat-title">Matcha</div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Matcha Latte</h4><span class="price">85 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Pure Matcha</h4><span class="price">80 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Coconut Matcha</h4><span class="price">85 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Yuzu Matcha</h4><span class="price">120 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Peach Matcha</h4><span class="price">120 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Strawberry Matcha</h4><span class="price">120 THB</span></div>
+          </div>
+          <div class="menu-item-spec">Ceremonial grade — umami, nutty, milky</div>
+        </div>
+      </div>
+
+      <div class="menu-row menu-cols reveal">
+        <div>
+          <div class="menu-cat-title">Tea &amp; Cocoa</div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Cocoa</h4><span class="price">75 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Thai Milk Tea</h4><span class="price">75 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Thai Lemon Tea</h4><span class="price">75 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Lemon Tea Classic</h4><span class="price">75 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Peach Tea</h4><span class="price">75 THB</span></div>
+          </div>
+          <div class="menu-addon">Add on — Oat milk · +30 THB</div>
+        </div>
+
+        <div>
+          <div class="menu-cat-title">Frozen Yogurt Series</div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Blueberry Yogurt</h4><span class="price">110 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Mango Yogurt</h4><span class="price">110 THB</span></div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Strawberry Yogurt</h4><span class="price">110 THB</span></div>
+          </div>
+          <div class="menu-item-spec">Fresh fruit + yogurt, blended</div>
+        </div>
+      </div>
+
+      <div class="menu-row menu-cols reveal">
+        <div>
+          <div class="menu-cat-title">Brunch</div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Ham &amp; Cheese Croissant</h4><span class="price">165 THB</span></div>
+            <div class="menu-item-spec">Buttery croissant, premium ham, melted cheese</div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Egg Croissant</h4><span class="price">165 THB</span></div>
+            <div class="menu-item-spec">Buttery croissant, creamy egg salad</div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Bagel with Cream Cheese</h4><span class="price">110 THB</span></div>
+            <div class="menu-item-spec">Freshly baked, smooth cream cheese</div>
+          </div>
+          <div class="menu-item">
+            <div class="menu-item-top"><h4>Tuna Sandwich</h4><span class="price">80 THB</span></div>
+            <div class="menu-item-spec">Classic tuna salad, toasted bread</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="events" id="events">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <span class="section-index">04 — Sessions</span>
+          <h2>On the schedule</h2>
+        </div>
+        <p class="desc">Seats are limited to the size of the cupping table. Reserve at the counter or by phone.</p>
+        <p style="font-family:var(--mono); font-size:14px; color:var(--steel);padding-top:24px;">Nothing scheduled yet -- check back soon!</p>
+    </div>
+  </div>  
+  </section>
+
+</main>
+
+<footer id="visit">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Exchange_Cafe</div>
+        <p>A specialty coffee counter run on cupping scores, not adjectives. Sourced, roasted, and brewed to a published spec.</p>
+      </div>
+      <div>
+        <div class="foot-h">Floor Hours</div>
+        <div class="foot-line">Mon – Sun · 08:00 – 17:00<br></div>
+      </div>
+      <div>
+        <div class="foot-h">Location</div>
+        <div class="foot-line">6,8 Naret Rd<br>Si Phraya,Bangrak Bangkok<br>+66 3 267 5518</div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 EXCHANGE COFFEE CO.</span>
+      <span>ROASTED ON PREMISES · BATCH LOG OPEN TO GUESTS</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Build ticker content and duplicate for seamless loop
+  const tickerData = [
+    {code:'MYA-SNW', label:'Myanmar Snow · Sun-Dried', score:'120 THB'},
+    {code:'ETH-GUJ', label:'Ethiopia Oromina Guji · Washed', score:'130 THB'},
+    {code:'THA-HNY', label:'Thailand Black Honey', score:'120 THB'},
+    {code:'YUN-WSH', label:'Yunnan Fine Washed', score:'130 THB'},
+    {code:'MATCHA', label:'Ceremonial grade matcha', score:'85 THB'},
+    {code:'BRUNCH', label:'Ham & cheese croissant', score:'165 THB'},
+  ];
+  const track = document.getElementById('tickerTrack');
+  function buildTicker(){
+    let html = '';
+    tickerData.forEach(t=>{
+      html += `<span class="ticker-item"><b>${t.code}</b>${t.label}<span class="score">${t.score}</span></span>`;
+    });
+    return html;
+  }
+  track.innerHTML = buildTicker() + buildTicker();
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
