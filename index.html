@@ -461,11 +461,10 @@
         <br>Because the best coffee experiences are the ones you take part in.
         </p>
         <div class="specs">
-          <div class="spec-row"><span class="label">Cupping threshold</span><span class="value">84.0 PTS MIN</span></div>
+          <div class="spec-row"><span class="label">Cupping threshold</span><span class="value">85.0 PTS MIN</span></div>
           <div class="spec-row"><span class="label">Espresso ratio</span><span class="value">1 : 2.0 · 25s</span></div>
           <div class="spec-row"><span class="label">Filter ratio</span><span class="value">1 : 15 · 92°C</span></div>
           <div class="spec-row"><span class="label">Water TDS</span><span class="value">125–150 PPM</span></div>
-          <div class="spec-row"><span class="label">Roast log entries</span><span class="value">4,812 BATCHES</span></div>
         </div>
       </div>
 
@@ -852,6 +851,8 @@
     <h4>Send us your order</h4>
     <button class="send-btn" id="lineBtn">Send via LINE</button>
     <button class="send-btn" id="emailBtn">Send via Email</button>
+    <p style="font-family:var(--mono); font-size:11.5px; color:var(--steel); margin-top:16px;line-height:1.7;">If you have any questions,feel free to contact us -<br>
+    LINE: <span style="color:var(--cream);">@exchangecoffee</span> · Email: <span style="color:var(--cream);">exchangecafe.7@gmail.com</span> </p>
     <span class="back-link" onclick="showCart()">&larr; Back to bag</span>
   </div>
 </div>
@@ -947,7 +948,7 @@
   function setupSendLinks(){
     const text = buildOrderText();
     document.getElementById('lineBtn').onclick = function(){
-      window.open(`https://line.me/R/oaMessage/${encodeURIComponent(SHOP_LINE_ID)}/?${encodeURIComponent(text)}`, '_blank');
+      window.open(`https://line.me/R/oaMessage/${(SHOP_LINE_ID)}/?${encodeURIComponent(text)}`, '_blank');
     };
     document.getElementById('emailBtn').onclick = function(){
       window.location.href = `mailto:${SHOP_EMAIL}?subject=${encodeURIComponent('New Bean Order')}&body=${encodeURIComponent(text)}`;
