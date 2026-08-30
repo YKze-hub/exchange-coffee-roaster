@@ -237,6 +237,90 @@
   .bean-meta div .v{ font-size:13.5px; color:var(--cream); }
   .bean-notes{ font-size:14px; line-height:1.6; color:#C9C3B6; font-style:italic; font-family:var(--serif); }
 
+  /* ---------- ORDERING ---------- */
+  .order-panel{ margin-top:22px; padding-top:20px; border-top:1px solid var(--line-on-dark); }
+  .size-options{ display:flex; gap:8px; }
+  .size-btn{
+    flex:1; background:transparent; border:1px solid var(--copper); color:var(--cream);
+    font-family:var(--mono); font-size:11.5px; letter-spacing:0.03em; text-transform:uppercase;
+    padding:10px 6px; border-radius:2px; cursor:pointer; transition:background .2s ease, color .2s ease;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .size-btn span{ font-size:10.5px; color:var(--steel); }
+  .size-btn:hover{ background:var(--copper); color:var(--ink); }
+  .size-btn:hover span{ color:var(--ink); }
+  .size-btn.added{ background:#5C7A5C; border-color:#5C7A5C; color:var(--cream); }
+
+  .cart-fab{
+    position:fixed; bottom:28px; right:28px; z-index:200;
+    background:var(--copper); color:var(--ink); border:none; border-radius:50%;
+    width:58px; height:58px; cursor:pointer; font-family:var(--mono); font-size:11px;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,0.35);
+    transition:transform .2s ease;
+  }
+  .cart-fab:hover{ transform:scale(1.06); }
+  .cart-fab .count{
+    position:absolute; top:-4px; right:-4px; background:var(--ink); color:var(--cream);
+    border-radius:50%; width:22px; height:22px; font-size:11px; display:flex;
+    align-items:center; justify-content:center; border:2px solid var(--paper);
+  }
+
+  .cart-panel{
+    position:fixed; top:0; right:-100%; width:min(420px, 100%); height:100%; z-index:300;
+    background:var(--ink-2); border-left:1px solid var(--line-on-dark);
+    transition:right .35s ease; display:flex; flex-direction:column; overflow-y:auto;
+  }
+  .cart-panel.open{ right:0; }
+  .cart-header{
+    padding:28px 28px 20px; border-bottom:1px solid var(--line-on-dark);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .cart-header h3{ font-family:var(--serif); font-size:22px; }
+  .cart-close{ background:none; border:none; color:var(--steel); font-size:22px; cursor:pointer; line-height:1; }
+  .cart-items{ padding:20px 28px; flex:1; }
+  .cart-empty{ color:var(--steel); font-size:14px; font-family:var(--mono); text-align:center; padding:40px 0; }
+  .cart-item{
+    display:flex; justify-content:space-between; align-items:center; gap:12px;
+    padding:14px 0; border-bottom:1px solid var(--line-on-dark);
+  }
+  .cart-item-name{ font-size:14.5px; }
+  .cart-item-size{ font-family:var(--mono); font-size:11px; color:var(--steel); display:block; margin-top:2px; }
+  .cart-item-price{ font-family:var(--mono); font-size:13.5px; white-space:nowrap; }
+  .cart-item-remove{ background:none; border:none; color:var(--steel); cursor:pointer; font-size:16px; padding:0 4px; }
+  .cart-item-remove:hover{ color:#C97B63; }
+  .cart-footer{ padding:24px 28px; border-top:1px solid var(--line-on-dark); }
+  .cart-total{
+    display:flex; justify-content:space-between; font-family:var(--mono);
+    font-size:15px; margin-bottom:20px;
+  }
+  .cart-checkout-btn{
+    width:100%; background:var(--copper); color:var(--ink); border:none; padding:14px;
+    font-family:var(--mono); font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    cursor:pointer; border-radius:2px;
+  }
+  .cart-checkout-btn:hover{ background:var(--copper-bright); }
+  .cart-checkout-btn:disabled{ opacity:0.4; cursor:not-allowed; }
+
+  .checkout-view{ display:none; padding:20px 28px 28px; }
+  .checkout-view.open{ display:block; }
+  .checkout-view h4{ font-family:var(--serif); font-size:18px; margin-bottom:14px; }
+  .qr-box{
+    background:var(--paper); border-radius:4px; padding:20px; text-align:center; margin-bottom:20px;
+  }
+  .qr-box img{ max-width:220px; margin:0 auto 12px; border-radius:2px; }
+  .qr-box p{ font-family:var(--mono); font-size:11px; color:#5C564C; }
+  .send-btn{
+    display:block; width:100%; text-align:center; padding:13px; margin-bottom:10px;
+    font-family:var(--mono); font-size:12px; letter-spacing:0.06em; text-transform:uppercase;
+    border-radius:2px; border:1px solid var(--copper); color:var(--cream); background:transparent; cursor:pointer;
+  }
+  .send-btn:hover{ background:var(--copper); color:var(--ink); }
+  .back-link{
+    font-family:var(--mono); font-size:11px; color:var(--steel); text-transform:uppercase;
+    cursor:pointer; display:inline-block; margin-top:6px;
+  }
+  .back-link:hover{ color:var(--cream); }
+
   /* ---------- MENU (paper) ---------- */
   .menu{ background:var(--paper); color:var(--charcoal); }
   .menu .section-index{ color:var(--copper); }
@@ -367,7 +451,7 @@
       <div class="section-head">
         <div>
           <span class="section-index">01 — Intro</span>
-          <h2>Come for the Coffee. <br> Stay for the Exchange.</h2>
+          <h2>More than a cup.</h2>
         </div>
       </div>
       <div class="intro-grid reveal">
@@ -421,7 +505,8 @@
         <p class="desc">Four lots currently listed. Each entry is re-cupped monthly; scores move, listings get delisted.</p>
       </div>
 
-      <div class="bean-card">
+      <div class="bean-grid reveal">
+        <div class="bean-card">
           <div class="bean-top">
             <span class="bean-code">THA · HNY</span>
             <div class="bean-score"><span class="num">90–120</span><span class="lbl">THB Range</span></div>
@@ -434,9 +519,15 @@
             <div><span class="k">Process</span><span class="v">Black Honey</span></div>
           </div>
           <div class="bean-notes">Dried fruit, lemon, yellow sugar.</div>
+          <div class="order-panel">
+            <div class="size-options">
+              <button class="size-btn" onclick="addToCart('Thailand Black Honey','100g',165,this)">100g<span>165 THB</span></button>
+              <button class="size-btn" onclick="addToCart('Thailand Black Honey','500g',750,this)">500g<span>750 THB</span></button>
+              <button class="size-btn" onclick="addToCart('Thailand Black Honey','1kg',1280,this)">1kg<span>1,280 THB</span></button>
+            </div>
+          </div>
         </div>
 
-      <div class="bean-grid reveal">
         <div class="bean-card">
           <div class="bean-top">
             <span class="bean-code">ETH · GUJ</span>
@@ -450,23 +541,33 @@
             <div><span class="k">Process</span><span class="v">Washed</span></div>
           </div>
           <div class="bean-notes">White floral, raspberry, honey.</div>
+          <div class="order-panel">
+            <div class="size-options">
+              <button class="size-btn" onclick="addToCart('Ethiopia Oromina Guji','100g',360,this)">100g<span>360 THB</span></button>
+            </div>
+          </div>
         </div>
-
-        
 
         <div class="bean-card">
           <div class="bean-top">
-            <span class="bean-code">MYA · SNW</span>
+            <span class="bean-code">MYA · HNY</span>
             <div class="bean-score"><span class="num">90–120</span><span class="lbl">THB Range</span></div>
           </div>
-          <h3>Myanmar Snow</h3>
-          <div class="bean-origin">Single Origin · Light Roast</div>
+          <h3>Myanmar Black Honey</h3>
+          <div class="bean-origin">Single Origin · Median_Dark Roast</div>
           <div class="bean-meta">
             <div><span class="k">Americano</span><span class="v">90 THB</span></div>
             <div><span class="k">Pour Over</span><span class="v">120 THB</span></div>
             <div><span class="k">Process</span><span class="v">Natural Sun-Dried</span></div>
           </div>
           <div class="bean-notes">Strawberry, orange, honey.</div>
+          <div class="order-panel">
+            <div class="size-options">
+              <button class="size-btn" onclick="addToCart('Myanmar Black Honey','100g',140,this)">100g<span>140 THB</span></button>
+              <button class="size-btn" onclick="addToCart('Myanmar Black Honey','500g',640,this)">500g<span>640 THB</span></button>
+              <button class="size-btn" onclick="addToCart('Myanmar Black Honey','1kg',1080,this)">1kg<span>1,080 THB</span></button>
+            </div>
+          </div>
         </div>
 
         <div class="bean-card">
@@ -482,6 +583,11 @@
             <div><span class="k">Process</span><span class="v">Fine Washed</span></div>
           </div>
           <div class="bean-notes">Blue ginger flower, buddha's hand citrus.</div>
+          <div class="order-panel">
+            <div class="size-options">
+              <button class="size-btn" onclick="addToCart('Yunnan Fine Washed','100g',360,this)">100g<span>360 THB</span></button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -711,6 +817,142 @@
     });
   }, { threshold: 0.15 });
   revealEls.forEach(el=>io.observe(el));
+</script>
+
+<!-- ===== ORDER CART ===== -->
+<button class="cart-fab" onclick="toggleCart()" aria-label="Open order cart">
+  BAG
+  <span class="count" id="cartCount">0</span>
+</button>
+
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-header">
+    <h3>Your Order</h3>
+    <button class="cart-close" onclick="toggleCart()">&times;</button>
+  </div>
+
+  <div id="cartView">
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">Your bag is empty. Pick a bean and a bag size to get started.</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total"><span>Total</span><span id="cartTotal">0 THB</span></div>
+      <button class="cart-checkout-btn" id="checkoutBtn" onclick="showCheckout()" disabled>Checkout</button>
+    </div>
+  </div>
+
+  <div class="checkout-view" id="checkoutView">
+    <h4>Scan to pay</h4>
+    <div class="qr-box">
+      <!-- Replace src below with your own PromptPay QR image once uploaded -->
+      <img src="promptpay-qr.png" alt="PromptPay QR code" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+      <p style="display:none;">[Upload promptpay-qr.png to this folder to show your QR code here]</p>
+      <p>Scan with any Thai banking app, then send us your payment slip below.</p>
+    </div>
+    <h4>Send us your order</h4>
+    <button class="send-btn" id="lineBtn">Send via LINE</button>
+    <button class="send-btn" id="emailBtn">Send via Email</button>
+    <span class="back-link" onclick="showCart()">&larr; Back to bag</span>
+  </div>
+</div>
+
+<script>
+  // ===== ORDER CART LOGIC =====
+  // TODO: replace these with your real LINE Official Account ID and email
+  const SHOP_LINE_ID = "@exchangecoffee";
+  const SHOP_EMAIL = "exchangecafe.7@gmail.com";
+
+  let cart = [];
+
+  function addToCart(name, size, price, btnEl){
+    cart.push({ name, size, price });
+    renderCart();
+    if(btnEl){
+      btnEl.classList.add('added');
+      const originalText = btnEl.innerHTML;
+      btnEl.innerHTML = 'Added ✓';
+      setTimeout(()=>{ btnEl.innerHTML = originalText; btnEl.classList.remove('added'); }, 900);
+    }
+  }
+
+  function removeFromCart(index){
+    cart.splice(index, 1);
+    renderCart();
+  }
+
+  function renderCart(){
+    const itemsEl = document.getElementById('cartItems');
+    const countEl = document.getElementById('cartCount');
+    const totalEl = document.getElementById('cartTotal');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+
+    countEl.textContent = cart.length;
+    checkoutBtn.disabled = cart.length === 0;
+
+    if(cart.length === 0){
+      itemsEl.innerHTML = '<div class="cart-empty">Your bag is empty. Pick a bean and a bag size to get started.</div>';
+      totalEl.textContent = '0 THB';
+      return;
+    }
+
+    let html = '';
+    let total = 0;
+    cart.forEach((item, i)=>{
+      total += item.price;
+      html += `
+        <div class="cart-item">
+          <div>
+            <div class="cart-item-name">${item.name}</div>
+            <span class="cart-item-size">${item.size}</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <span class="cart-item-price">${item.price.toLocaleString()} THB</span>
+            <button class="cart-item-remove" onclick="removeFromCart(${i})">&times;</button>
+          </div>
+        </div>`;
+    });
+    itemsEl.innerHTML = html;
+    totalEl.textContent = total.toLocaleString() + ' THB';
+  }
+
+  function toggleCart(){
+    document.getElementById('cartPanel').classList.toggle('open');
+  }
+
+  function showCheckout(){
+    document.getElementById('cartView').style.display = 'none';
+    document.getElementById('checkoutView').classList.add('open');
+    setupSendLinks();
+  }
+
+  function showCart(){
+    document.getElementById('checkoutView').classList.remove('open');
+    document.getElementById('cartView').style.display = 'block';
+  }
+
+  function buildOrderText(){
+    let lines = ["New bean order from the website:", ""];
+    let total = 0;
+    cart.forEach(item=>{
+      lines.push(`- ${item.name} (${item.size}) — ${item.price.toLocaleString()} THB`);
+      total += item.price;
+    });
+    lines.push("");
+    lines.push(`Total: ${total.toLocaleString()} THB`);
+    lines.push("");
+    lines.push("[Attach your payment slip screenshot here]");
+    return lines.join("\n");
+  }
+
+  function setupSendLinks(){
+    const text = buildOrderText();
+    document.getElementById('lineBtn').onclick = function(){
+      window.open(`https://line.me/R/oaMessage/${encodeURIComponent(SHOP_LINE_ID)}/?${encodeURIComponent(text)}`, '_blank');
+    };
+    document.getElementById('emailBtn').onclick = function(){
+      window.location.href = `mailto:${SHOP_EMAIL}?subject=${encodeURIComponent('New Bean Order')}&body=${encodeURIComponent(text)}`;
+    };
+  }
 </script>
 
 </body>
