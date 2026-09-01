@@ -769,7 +769,7 @@
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <div class="foot-brand">Exchange_Cafe</div>
+        <div class="foot-brand">Exchange Coffee & Roasters</div>
         <p>A specialty coffee counter run on cupping scores, not adjectives. Sourced, roasted, and brewed to a published spec.</p>
       </div>
       <div>
@@ -945,15 +945,17 @@
     return lines.join("\n");
   }
 
-  function setupSendLinks(){
+
+  function setupSendLinks() {
     const text = buildOrderText();
-    document.getElementById('lineBtn').onclick = function(){
-      window.open(`https://line.me/R/oaMessage/${(SHOP_LINE_ID)}/?${encodeURIComponent(text)}`, '_blank');
-    };
-    document.getElementById('emailBtn').onclick = function(){
-      window.location.href = `mailto:${SHOP_EMAIL}?subject=${encodeURIComponent('New Bean Order')}&body=${encodeURIComponent(text)}`;
-    };
-  }
+
+    document.getElementById('lineBtn').onclick = function() {
+      const lineUrl =
+        `https://line.me/R/oaMessage/${encodeURIComponent(SHOP_LINE_ID)}/?${encodeURIComponent(text)}`;
+
+    window.open(lineUrl, '_blank');
+  };
+}
 </script>
 
 </body>
