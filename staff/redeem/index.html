@@ -253,6 +253,17 @@ const SUPABASE_FUNCTION_URL =
 const rewardTokenInput =
     document.getElementById("rewardToken");
 
+const urlParams =
+    new URLSearchParams(window.location.search);
+
+const codeFromURL =
+    urlParams.get("code");
+
+if (codeFromURL) {
+    rewardTokenInput.value =
+        codeFromURL.trim().toUpperCase();
+}
+
 const staffPinInput =
     document.getElementById("staffPin");
 
