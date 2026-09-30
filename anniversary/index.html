@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
@@ -26,117 +27,225 @@
 
 <body>
 
-    <main class="anniversary">
+    <main class="anniversary-page">
 
-        <div class="eyebrow">
-            EXCHANGE COFFEE & ROASTER
-        </div>
+        <!-- =========================================
+             HERO
+        ========================================== -->
 
+        <section class="hero">
 
-        <div class="year">
-            01 — 10 — 2026
-        </div>
-
-
-        <h1>
-            One Year<br>
-            of Exchange.
-        </h1>
-
-
-        <p class="intro">
-            Thank you for being part of our first year.
-            To celebrate, we have prepared a special
-            anniversary reward for you.
-        </p>
-
-
-        <section class="reward-card">
-
-            <div class="reward-label">
-                ANNIVERSARY REWARD
+            <div class="brand">
+                EXCHANGE COFFEE & ROASTER
             </div>
 
-            <h2>
-                BUY ONE<br>
-                GET ONE
-            </h2>
+            <div class="anniversary-date">
+                01 · 10 · 2026
+            </div>
 
-            <p>
-                Claim your reward during
-                <strong>1–7 October 2026</strong>.
+            <div class="year-display">
+
+                <span class="year-number">
+                    01
+                </span>
+
+                <span class="year-word">
+                    YEAR
+                </span>
+
+            </div>
+
+            <h1>
+                OF<br>
+                EXCHANGE.
+            </h1>
+
+            <div class="small-divider">
+                <span></span>
+                ✦
+                <span></span>
+            </div>
+
+            <p class="hero-text">
+                One year of coffee,<br>
+                conversations and shared moments.
             </p>
 
-            <p>
-                Redeem from
-                <strong>8 October 2026</strong>.
+            <p class="thank-you">
+                Thank you for being part of our story.
             </p>
 
         </section>
 
 
-        <button
-            id="loginButton"
-            class="primary-button"
-        >
-            CLAIM MY REWARD
-        </button>
+        <!-- =========================================
+             REWARD
+        ========================================== -->
+
+        <section class="reward-section">
+
+            <div class="section-label">
+                OUR ANNIVERSARY GIFT
+            </div>
+
+            <div class="reward-card">
+
+                <div class="reward-top">
+                    <span>
+                        EXCHANGE COFFEE
+                    </span>
+
+                    <span>
+                        01 YEAR
+                    </span>
+                </div>
+
+                <div class="reward-content">
+
+                    <p class="reward-intro">
+                        TO CELEBRATE
+                    </p>
+
+                    <h2>
+                        BUY ONE
+                        <span>GET ONE</span>
+                    </h2>
+
+                    <div class="coffee-line">
+                        ☕
+                    </div>
+
+                    <p class="reward-description">
+                        Buy one coffee and enjoy another
+                        on us during our anniversary celebration.
+                    </p>
+
+                </div>
+
+                <div class="reward-footer">
+
+                    <div>
+                        <span class="footer-label">
+                            CLAIM
+                        </span>
+
+                        <strong>
+                            01 — 07 OCT
+                        </strong>
+                    </div>
+
+                    <div>
+                        <span class="footer-label">
+                            REDEEM
+                        </span>
+
+                        <strong>
+                            FROM 08 OCT
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
 
 
-        <p
-            id="statusMessage"
-            class="status"
-        >
-            Loading...
-        </p>
+        <!-- =========================================
+             CLAIM
+        ========================================== -->
+
+        <section class="claim-section">
+
+            <p class="claim-note">
+                Your anniversary reward is connected
+                to your LINE account.
+            </p>
+
+            <button
+                id="loginButton"
+                class="claim-button"
+            >
+                CLAIM MY REWARD
+            </button>
+
+            <div
+                id="statusMessage"
+                class="status"
+            >
+                Loading...
+            </div>
+
+        </section>
 
 
-        <div
+        <!-- =========================================
+             ALREADY CLAIMED
+        ========================================== -->
+
+        <section
             id="alreadyClaimed"
-            class="hidden message-card"
+            class="claimed-card hidden"
         >
 
-            <div class="success-mark">
+            <div class="claimed-icon">
                 ✓
             </div>
 
+            <p class="claimed-label">
+                ANNIVERSARY REWARD
+            </p>
+
             <h2>
-                Your reward is already claimed.
+                YOUR REWARD<br>
+                IS READY.
             </h2>
 
             <p>
-                You can use your anniversary reward
-                from 8 October 2026.
+                You have already claimed your
+                anniversary reward.
             </p>
 
-        </div>
+            <div class="redeem-date">
+                REDEEM FROM<br>
+                <strong>08 OCTOBER 2026</strong>
+            </div>
 
+        </section>
+
+
+        <!-- =========================================
+             FOOTER
+        ========================================== -->
 
         <footer>
-            Exchange Coffee & Roaster<br>
-            Bangkok
+
+            <div class="footer-logo">
+                EXCHANGE
+            </div>
+
+            <p>
+                COFFEE & ROASTER
+            </p>
+
+            <span>
+                BANGKOK · THAILAND
+            </span>
+
         </footer>
 
     </main>
 
 
-    <script>
+    <!-- =========================================
+         LIFF / REWARD LOGIC
+    ========================================== -->
 
-        /*
-         * =====================================================
-         * CONFIGURATION
-         * =====================================================
-         */
+    <script>
 
         const LIFF_ID =
             "2011803432-8wUZVBDB";
 
-
-        /*
-         * =====================================================
-         * INITIALIZE LIFF
-         * =====================================================
-         */
 
         async function initializeLIFF() {
 
@@ -154,14 +263,13 @@
                 });
 
 
-                /*
-                 * User is not logged in.
-                 */
-
                 if (!liff.isLoggedIn()) {
 
                     status.textContent =
                         "Please log in with LINE to claim your reward.";
+
+                    status.className =
+                        "status info";
 
                     loginButton.textContent =
                         "CLAIM WITH LINE";
@@ -173,12 +281,11 @@
                 }
 
 
-                /*
-                 * User is already logged in.
-                 */
-
                 status.textContent =
                     "You're connected with LINE.";
+
+                status.className =
+                    "status connected";
 
                 loginButton.textContent =
                     "CHECK MY REWARD";
@@ -197,16 +304,13 @@
                 status.textContent =
                     "Unable to connect to LINE. Please try again.";
 
+                status.className =
+                    "status error";
+
             }
 
         }
 
-
-        /*
-         * =====================================================
-         * LINE LOGIN
-         * =====================================================
-         */
 
         function loginWithLINE() {
 
@@ -220,22 +324,6 @@
             }
 
         }
-
-
-        /*
-         * =====================================================
-         * CLAIM REWARD
-         * =====================================================
-         *
-         * 1. Get the LINE ID token.
-         * 2. Send it to Supabase Edge Function.
-         * 3. Backend verifies the token with LINE.
-         * 4. Backend gets the real LINE user ID.
-         * 5. Backend checks whether the customer
-         *    already claimed this campaign.
-         * 6. Backend creates the reward.
-         *
-         */
 
 
         async function checkReward() {
@@ -252,13 +340,12 @@
                 status.textContent =
                     "Checking your LINE account...";
 
+                status.className =
+                    "status checking";
+
                 loginButton.disabled =
                     true;
 
-
-                /*
-                 * Get the LINE ID token.
-                 */
 
                 const idToken =
                     liff.getIDToken();
@@ -269,6 +356,9 @@
                     status.textContent =
                         "Unable to get your LINE account information.";
 
+                    status.className =
+                        "status error";
+
                     loginButton.disabled =
                         false;
 
@@ -276,11 +366,6 @@
 
                 }
 
-
-                /*
-                 * Send the LINE ID token
-                 * to our Supabase Edge Function.
-                 */
 
                 const response =
                     await fetch(
@@ -303,36 +388,31 @@
                     await response.json();
 
 
-                /*
-                 * Reward successfully claimed.
-                 */
-
                 if (result.success) {
 
                     status.textContent =
                         "Your anniversary reward has been claimed!";
 
+                    status.className =
+                        "status success";
+
+
                     loginButton.textContent =
                         "REWARD CLAIMED";
+
+                    loginButton.classList.add(
+                        "claimed-button"
+                    );
 
                     loginButton.disabled =
                         true;
 
 
-                    console.log(
-                        "Reward:",
-                        result.reward
-                    );
-
+                    showReward(result.reward);
 
                     return;
-
                 }
 
-
-                /*
-                 * Customer already claimed.
-                 */
 
                 if (
                     response.status === 409 &&
@@ -342,8 +422,16 @@
                     status.textContent =
                         "You have already claimed your anniversary reward.";
 
+                    status.className =
+                        "status success";
+
+
                     loginButton.textContent =
                         "ALREADY CLAIMED";
+
+                    loginButton.classList.add(
+                        "claimed-button"
+                    );
 
                     loginButton.disabled =
                         true;
@@ -355,25 +443,16 @@
                         .remove("hidden");
 
 
-                    console.log(
-                        "Existing reward:",
-                        result.reward
-                    );
-
-
                     return;
-
                 }
 
-
-                /*
-                 * Other error.
-                 */
 
                 status.textContent =
                     result.error ||
                     "Unable to claim your reward.";
 
+                status.className =
+                    "status error";
 
                 loginButton.disabled =
                     false;
@@ -390,6 +469,8 @@
                 status.textContent =
                     "Something went wrong. Please try again.";
 
+                status.className =
+                    "status error";
 
                 loginButton.disabled =
                     false;
@@ -399,15 +480,93 @@
         }
 
 
-        /*
-         * =====================================================
-         * START
-         * =====================================================
-         */
+        function showReward(reward) {
+
+            const existing =
+                document.getElementById(
+                    "rewardResult"
+                );
+
+
+            if (existing) {
+                existing.remove();
+            }
+
+
+            const rewardResult =
+                document.createElement("section");
+
+
+            rewardResult.id =
+                "rewardResult";
+
+
+            rewardResult.className =
+                "reward-result";
+
+
+            rewardResult.innerHTML = `
+
+                <div class="reward-result-icon">
+                    ✓
+                </div>
+
+                <p class="result-label">
+                    ANNIVERSARY REWARD
+                </p>
+
+                <h2>
+                    YOUR REWARD<br>
+                    IS READY.
+                </h2>
+
+                <div class="result-reward">
+                    BUY ONE<br>
+                    <span>GET ONE</span>
+                </div>
+
+                <p class="result-date">
+                    Redeem from
+                    <strong>8 October 2026</strong>
+                </p>
+
+                <div class="reward-token-box">
+
+                    <span>
+                        YOUR REWARD CODE
+                    </span>
+
+                    <strong>
+                        ${reward.reward_token}
+                    </strong>
+
+                </div>
+
+                <p class="result-note">
+                    Show this reward code to our staff
+                    when you redeem your reward.
+                </p>
+
+            `;
+
+
+            document
+                .querySelector(".claim-section")
+                .after(rewardResult);
+
+
+            rewardResult.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
+            });
+
+        }
+
 
         initializeLIFF();
 
     </script>
 
 </body>
+
 </html>
