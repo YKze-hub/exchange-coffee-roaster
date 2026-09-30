@@ -2,14 +2,14 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "https://exchange-cafe.com",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
 Deno.serve(async (req) => {
   try {
-
-    // Handle browser CORS preflight request
+    // CORS preflight
     if (req.method === "OPTIONS") {
       return new Response("ok", {
         status: 200,
@@ -17,6 +17,7 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Only POST is allowed
     if (req.method !== "POST") {
       return new Response(
         JSON.stringify({
@@ -33,26 +34,22 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Supabase client
     const supabaseUrl =
       Deno.env.get("SUPABASE_URL")!;
 
     const serviceRoleKey =
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    const supabase =
-      createClient(
-        supabaseUrl,
-        serviceRoleKey
-      );
+    const supabase = createClient(
+      supabaseUrl,
+      serviceRoleKey
+    );
 
+    // Read request
+    const body = await req.json();
 
-    // Get request body
-    const body =
-      await req.json();
-
-    const idToken =
-      body.id_token;
-
+    const idToken = body.id_token;
 
     if (!idToken) {
       return new Response(
@@ -70,38 +67,36 @@ Deno.serve(async (req) => {
       );
     }
 
-
     // Verify LINE ID token
-    const verifyResponse =
-      await fetch(
-        "https://api.line.me/oauth2/v2.1/verify",
-        {
-          method: "POST",
+    const verifyResponse = await fetch(
+      "https://api.line.me/oauth2/v2.1/verify",
+      {
+        method: "POST",
 
-          headers: {
-            "Content-Type":
-              "application/x-www-form-urlencoded",
-          },
+        headers: {
+          "Content-Type":
+            "application/x-www-form-urlencoded",
+        },
 
-          body:
-            new URLSearchParams({
-              id_token: idToken,
-              client_id:
-              "2011803432",
-            }),
-        }
-      );
-
+        body: new URLSearchParams({
+          id_token: idToken,
+          client_id: "2011803432",
+        }),
+      }
+    );
 
     const lineTokenData =
       await verifyResponse.json();
 
-
+    // TEMPORARY DIAGNOSTIC
+    // This lets us see the exact reason
+    // LINE rejects the token.
     if (!verifyResponse.ok) {
       return new Response(
         JSON.stringify({
           success: false,
           error: "Invalid LINE ID token",
+          line_error: lineTokenData,
         }),
         {
           status: 401,
@@ -113,14 +108,12 @@ Deno.serve(async (req) => {
       );
     }
 
-
-    // Get real LINE user ID
+    // Get LINE user information
     const lineUserId =
       lineTokenData.sub;
 
     const displayName =
       lineTokenData.name ?? null;
-
 
     if (!lineUserId) {
       return new Response(
@@ -138,30 +131,20 @@ Deno.serve(async (req) => {
       );
     }
 
-
     // Development campaign
     const campaignCode =
       "DEV-TEST-2026";
 
-
     const {
       data: campaign,
       error: campaignError,
-    } =
-      await supabase
-        .from("campaigns")
-        .select("*")
-        .eq(
-          "campaign_code",
-          campaignCode
-        )
-        .single();
+    } = await supabase
+      .from("campaigns")
+      .select("*")
+      .eq("campaign_code", campaignCode)
+      .single();
 
-
-    if (
-      campaignError ||
-      !campaign
-    ) {
+    if (campaignError || !campaign) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -171,28 +154,20 @@ Deno.serve(async (req) => {
           status: 404,
           headers: {
             ...corsHeaders,
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
         }
       );
     }
 
-
     // Check claim period
-    const now =
-      new Date();
+    const now = new Date();
 
     const claimStart =
-      new Date(
-        campaign.claim_start
-      );
+      new Date(campaign.claim_start);
 
     const claimEnd =
-      new Date(
-        campaign.claim_end
-      );
-
+      new Date(campaign.claim_end);
 
     if (
       now < claimStart ||
@@ -201,79 +176,59 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({
           success: false,
-          error:
-            "Claim period is not active",
+          error: "Claim period is not active",
         }),
         {
           status: 400,
           headers: {
             ...corsHeaders,
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
         }
       );
     }
-
 
     // Find customer
     let {
       data: customer,
       error: customerError,
-    } =
-      await supabase
-        .from("customers")
-        .select("*")
-        .eq(
-          "line_user_id",
-          lineUserId
-        )
-        .maybeSingle();
-
+    } = await supabase
+      .from("customers")
+      .select("*")
+      .eq("line_user_id", lineUserId)
+      .maybeSingle();
 
     if (customerError) {
       return new Response(
         JSON.stringify({
           success: false,
-          error:
-            customerError.message,
+          error: customerError.message,
         }),
         {
           status: 500,
           headers: {
             ...corsHeaders,
-            "Content-Type":
-              "application/json",
+            "Content-Type": "application/json",
           },
         }
       );
     }
 
-
-    // Create customer if needed
+    // Create customer
     if (!customer) {
-
       const {
         data: newCustomer,
-        error:
-          createCustomerError,
-      } =
-        await supabase
-          .from("customers")
-          .insert({
-            line_user_id:
-              lineUserId,
+        error: createCustomerError,
+      } = await supabase
+        .from("customers")
+        .insert({
+          line_user_id: lineUserId,
+          display_name: displayName,
+        })
+        .select()
+        .single();
 
-            display_name:
-              displayName,
-          })
-          .select()
-          .single();
-
-
-      if (
-        createCustomerError
-      ) {
+      if (createCustomerError) {
         return new Response(
           JSON.stringify({
             success: false,
@@ -291,31 +246,19 @@ Deno.serve(async (req) => {
         );
       }
 
-
-      customer =
-        newCustomer;
+      customer = newCustomer;
     }
 
-
-    // Check existing reward
+    // Check whether already claimed
     const {
       data: existingReward,
-      error:
-        existingRewardError,
-    } =
-      await supabase
-        .from("rewards")
-        .select("*")
-        .eq(
-          "customer_id",
-          customer.id
-        )
-        .eq(
-          "campaign_id",
-          campaign.id
-        )
-        .maybeSingle();
-
+      error: existingRewardError,
+    } = await supabase
+      .from("rewards")
+      .select("*")
+      .eq("customer_id", customer.id)
+      .eq("campaign_id", campaign.id)
+      .maybeSingle();
 
     if (existingRewardError) {
       return new Response(
@@ -335,23 +278,17 @@ Deno.serve(async (req) => {
       );
     }
 
-
     // Already claimed
     if (existingReward) {
       return new Response(
         JSON.stringify({
           success: false,
-
-          error:
-            "Already claimed",
-
+          error: "Already claimed",
           reward: {
             reward_token:
               existingReward.reward_token,
-
             status:
               existingReward.status,
-
             claimed_at:
               existingReward.claimed_at,
           },
@@ -367,7 +304,6 @@ Deno.serve(async (req) => {
       );
     }
 
-
     // Generate reward token
     const rewardToken =
       `EX1-${crypto
@@ -376,55 +312,33 @@ Deno.serve(async (req) => {
         .slice(0, 12)
         .toUpperCase()}`;
 
-
     const expiresAt =
       campaign.claim_end;
-
 
     // Create reward
     const {
       data: reward,
       error: rewardError,
-    } =
-      await supabase
-        .from("rewards")
-        .insert({
-          customer_id:
-            customer.id,
-
-          campaign_id:
-            campaign.id,
-
-          reward_type:
-            "BUY_ONE_GET_ONE",
-
-          reward_token:
-            rewardToken,
-
-          status:
-            "claimed",
-
-          claimed_at:
-            now.toISOString(),
-
-          expires_at:
-            expiresAt,
-        })
-        .select()
-        .single();
-
+    } = await supabase
+      .from("rewards")
+      .insert({
+        customer_id: customer.id,
+        campaign_id: campaign.id,
+        reward_type: "BUY_ONE_GET_ONE",
+        reward_token: rewardToken,
+        status: "claimed",
+        claimed_at: now.toISOString(),
+        expires_at: expiresAt,
+      })
+      .select()
+      .single();
 
     if (rewardError) {
-
-      if (
-        rewardError.code ===
-        "23505"
-      ) {
+      if (rewardError.code === "23505") {
         return new Response(
           JSON.stringify({
             success: false,
-            error:
-              "Already claimed",
+            error: "Already claimed",
           }),
           {
             status: 409,
@@ -437,12 +351,10 @@ Deno.serve(async (req) => {
         );
       }
 
-
       return new Response(
         JSON.stringify({
           success: false,
-          error:
-            rewardError.message,
+          error: rewardError.message,
         }),
         {
           status: 500,
@@ -455,35 +367,27 @@ Deno.serve(async (req) => {
       );
     }
 
-
     // Success
     return new Response(
       JSON.stringify({
         success: true,
-
         message:
           "Reward claimed successfully",
-
         reward: {
           reward_token:
             reward.reward_token,
-
           reward_type:
             reward.reward_type,
-
           status:
             reward.status,
-
           claimed_at:
             reward.claimed_at,
-
           expires_at:
             reward.expires_at,
         },
       }),
       {
         status: 200,
-
         headers: {
           ...corsHeaders,
           "Content-Type":
@@ -492,15 +396,12 @@ Deno.serve(async (req) => {
       }
     );
 
-
   } catch (error) {
-
     console.error(error);
 
     return new Response(
       JSON.stringify({
         success: false,
-
         error:
           error instanceof Error
             ? error.message
@@ -508,7 +409,6 @@ Deno.serve(async (req) => {
       }),
       {
         status: 500,
-
         headers: {
           ...corsHeaders,
           "Content-Type":
