@@ -30,14 +30,13 @@ Deno.serve(async (req) => {
     // Read request body
     const body = await req.json();
 
-    const lineUserId = body.line_user_id;
-    const displayName = body.display_name ?? null;
+    const idToken = body.id_token;
 
-    if (!lineUserId) {
+    if (!idToken) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: "line_user_id is required",
+          error: "id_token is required",
         }),
         {
           status: 400,
@@ -48,10 +47,67 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Campaign we are testing
+    // -----------------------------------------------------
+    // VERIFY LINE ID TOKEN
+    // -----------------------------------------------------
+
+    const verifyResponse = await fetch(
+      "https://api.line.me/oauth2/v2.1/verify",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: new URLSearchParams({
+          id_token: idToken,
+          client_id: "2011803432-8wUZVBDB",
+        }),
+      }
+    );
+
+    const lineTokenData = await verifyResponse.json();
+
+    if (!verifyResponse.ok) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Invalid LINE ID token",
+        }),
+        {
+          status: 401,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // LINE user ID obtained from the verified token
+    const lineUserId = lineTokenData.sub;
+
+    const displayName = lineTokenData.name ?? null;
+
+    if (!lineUserId) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "LINE user ID not found",
+        }),
+        {
+          status: 401,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // -----------------------------------------------------
+    // CAMPAIGN
+    // -----------------------------------------------------
+
     const campaignCode = "DEV-TEST-2026";
 
-    // Find campaign
     const { data: campaign, error: campaignError } =
       await supabase
         .from("campaigns")
@@ -74,7 +130,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Check claim period
+    // -----------------------------------------------------
+    // CHECK CLAIM PERIOD
+    // -----------------------------------------------------
+
     const now = new Date();
 
     const claimStart = new Date(campaign.claim_start);
@@ -95,7 +154,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Find existing customer
+    // -----------------------------------------------------
+    // FIND CUSTOMER
+    // -----------------------------------------------------
+
     let { data: customer, error: customerError } =
       await supabase
         .from("customers")
@@ -148,7 +210,10 @@ Deno.serve(async (req) => {
       customer = newCustomer;
     }
 
-    // Check whether this customer already claimed this campaign
+    // -----------------------------------------------------
+    // CHECK EXISTING REWARD
+    // -----------------------------------------------------
+
     const { data: existingReward, error: existingRewardError } =
       await supabase
         .from("rewards")
@@ -192,14 +257,18 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Generate unique reward token
-    const rewardToken =
-      `EX1-${crypto.randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase()}`;
+    // -----------------------------------------------------
+    // CREATE REWARD
+    // -----------------------------------------------------
 
-    // Reward expires at the end of the campaign
+    const rewardToken =
+      `EX1-${crypto.randomUUID()
+        .replaceAll("-", "")
+        .slice(0, 12)
+        .toUpperCase()}`;
+
     const expiresAt = campaign.claim_end;
 
-    // Create reward
     const { data: reward, error: rewardError } =
       await supabase
         .from("rewards")
@@ -246,7 +315,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Success
+    // -----------------------------------------------------
+    // SUCCESS
+    // -----------------------------------------------------
+
     return new Response(
       JSON.stringify({
         success: true,
@@ -266,7 +338,9 @@ Deno.serve(async (req) => {
         },
       }
     );
+
   } catch (error) {
+
     return new Response(
       JSON.stringify({
         success: false,
