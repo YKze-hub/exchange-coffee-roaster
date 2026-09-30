@@ -95,282 +95,401 @@
 <script>
 const LIFF_ID =
     "2011803432-8wUZVBDB";
+
 const CLAIM_FUNCTION_URL =
     "https://wbjwcavloaqlsuzyskug.supabase.co/functions/v1/claim-reward";
+
 /* =========================================
    INITIALIZE LIFF
 ========================================= */
 async function initializeLIFF() {
+
     const status =
         document.getElementById("statusMessage");
+
     const loginButton =
         document.getElementById("loginButton");
+
     try {
+
         status.textContent =
             "Connecting to LINE...";
+
         status.className =
             "status checking";
+
         await liff.init({
             liffId: LIFF_ID
         });
-        console.log(
-            "LIFF initialized"
-        );
-        /* =================================
-           USER IS NOT LOGGED IN
-        ================================= */
+
+        console.log("LIFF initialized");
+
+        /*
+         * If the user is not logged in,
+         * ask LINE to log them in.
+         */
         if (!liff.isLoggedIn()) {
+
             status.textContent =
                 "Please log in with LINE to claim your reward.";
+
             status.className =
                 "status info";
+
             loginButton.textContent =
                 "CLAIM WITH LINE";
+
             loginButton.onclick =
                 loginWithLINE;
+
             return;
         }
-        /* =================================
-           USER IS LOGGED IN
-        ================================= */
+
+        /*
+         * User is already logged in.
+         */
         status.textContent =
             "You're connected with LINE.";
+
         status.className =
             "status connected";
+
         loginButton.textContent =
-            "CHECK MY REWARD";
+            "CLAIM MY REWARD";
+
         loginButton.onclick =
             checkReward;
-    }
-    catch (error) {
+
+    } catch (error) {
+
         console.error(
             "LIFF initialization error:",
             error
         );
+
         status.textContent =
             "Unable to connect to LINE. Please try again.";
+
         status.className =
             "status error";
     }
 }
+
+
 /* =========================================
    LINE LOGIN
 ========================================= */
 function loginWithLINE() {
-    if (liff.isLoggedIn()) {
-        checkReward();
-        return;
-    }
+
+    console.log("Starting LINE login...");
+
     liff.login({
-        redirectUri:
-            window.location.href
+        redirectUri: window.location.href
     });
 }
+
+
 /* =========================================
    CLAIM REWARD
 ========================================= */
 async function checkReward() {
+
     const status =
         document.getElementById("statusMessage");
+
     const loginButton =
         document.getElementById("loginButton");
+
     try {
+
+        loginButton.disabled = true;
+
         status.textContent =
-            "Checking your LINE account...";
+            "Getting your LINE account information...";
+
         status.className =
             "status checking";
-        loginButton.disabled =
-            true;
+
+
         /* =================================
-           GET FRESH LINE ID TOKEN
+           MAKE SURE LIFF SESSION IS ACTIVE
         ================================= */
-        const idToken =
-            liff.getIDToken();
-        console.log(
-            "LINE ID token exists:",
-            Boolean(idToken)
-        );
-        if (!idToken) {
+
+        if (!liff.isLoggedIn()) {
+
             status.textContent =
-                "Unable to get your LINE account information.";
+                "Please log in with LINE first.";
+
             status.className =
                 "status error";
-            loginButton.disabled =
-                false;
+
+            loginButton.disabled = false;
+
+            loginWithLINE();
+
             return;
         }
+
+
+        /* =================================
+           GET LINE ID TOKEN
+        ================================= */
+
+        const idToken =
+            liff.getIDToken();
+
+        console.log(
+            "ID token exists:",
+            Boolean(idToken)
+        );
+
+        if (!idToken) {
+
+            status.textContent =
+                "Your LINE session has expired. Please log in again.";
+
+            status.className =
+                "status error";
+
+            loginButton.disabled = false;
+
+            return;
+        }
+
+
         /* =================================
            SEND TOKEN TO SUPABASE
         ================================= */
+
+        status.textContent =
+            "Checking your reward...";
+
         const response =
             await fetch(
                 CLAIM_FUNCTION_URL,
                 {
                     method: "POST",
+
                     headers: {
                         "Content-Type":
                             "application/json"
                     },
+
                     body: JSON.stringify({
-                        id_token:
-                            idToken
+                        id_token: idToken
                     })
                 }
             );
+
+
         const result =
             await response.json();
+
         console.log(
             "Claim response:",
             response.status,
             result
         );
+
+
         /* =================================
            SUCCESS
         ================================= */
+
         if (result.success) {
+
             status.textContent =
                 "Your anniversary reward has been claimed!";
+
             status.className =
                 "status success";
+
             loginButton.textContent =
                 "REWARD CLAIMED";
+
             loginButton.classList.add(
                 "claimed-button"
             );
-            loginButton.disabled =
-                true;
-            showReward(
-                result.reward
-            );
+
+            loginButton.disabled = true;
+
+            showReward(result.reward);
+
             return;
         }
+
+
         /* =================================
            ALREADY CLAIMED
         ================================= */
+
         if (
             response.status === 409 &&
             result.error === "Already claimed"
         ) {
+
             status.textContent =
                 "You have already claimed your anniversary reward.";
+
             status.className =
                 "status success";
+
             loginButton.textContent =
                 "ALREADY CLAIMED";
+
             loginButton.classList.add(
                 "claimed-button"
             );
-            loginButton.disabled =
-                true;
+
+            loginButton.disabled = true;
+
             document
                 .getElementById("alreadyClaimed")
                 .classList
                 .remove("hidden");
+
             return;
         }
+
+
         /* =================================
-           LINE TOKEN ERROR
+           TOKEN ERROR
         ================================= */
+
         if (
             result.line_error &&
             result.line_error.error_description
         ) {
+
             status.textContent =
                 result.line_error.error_description;
-        }
-        else {
+
+        } else {
+
             status.textContent =
                 result.error ||
                 "Unable to claim your reward.";
         }
+
         status.className =
             "status error";
-        loginButton.disabled =
-            false;
-    }
-    catch (error) {
+
+        loginButton.disabled = false;
+
+
+    } catch (error) {
+
         console.error(
             "Reward claim error:",
             error
         );
+
         status.textContent =
             "Something went wrong. Please try again.";
+
         status.className =
             "status error";
-        loginButton.disabled =
-            false;
+
+        loginButton.disabled = false;
     }
 }
+
+
 /* =========================================
    SHOW REWARD
 ========================================= */
 function showReward(reward) {
+
     const existingReward =
         document.getElementById(
             "rewardResult"
         );
+
     if (existingReward) {
         existingReward.remove();
     }
+
+
     const rewardResult =
         document.createElement("div");
+
     rewardResult.id =
         "rewardResult";
+
     rewardResult.className =
         "reward-result";
+
+
     rewardResult.innerHTML = `
         <div class="reward-result-label">
             ANNIVERSARY REWARD
         </div>
+
         <div class="reward-result-title">
             YOUR REWARD IS READY.
         </div>
+
         <div class="reward-result-type">
             BUY ONE GET ONE
         </div>
+
         <div class="reward-result-date">
             Redeem from 8 October 2026
         </div>
+
         <div class="reward-qr">
             <img
                 id="rewardQR"
                 alt="Reward QR Code"
             >
         </div>
+
         <div class="reward-code-label">
             REWARD CODE
         </div>
+
         <div class="reward-code">
             ${reward.reward_token}
         </div>
+
         <div class="reward-instruction">
             Show this QR code or reward code
             to our staff when you redeem
             your reward.
         </div>
     `;
+
+
     document
         .querySelector(".claim-section")
         .appendChild(
             rewardResult
         );
+
+
     /* =================================
        CREATE QR CODE
     ================================= */
+
     const qrImage =
         document.getElementById(
             "rewardQR"
         );
+
     qrImage.src =
         "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=" +
         encodeURIComponent(
             reward.reward_token
         );
 }
+
+
 /* =========================================
    START LIFF
 ========================================= */
+
 initializeLIFF();
 </script>
+
 </body>
 </html>
