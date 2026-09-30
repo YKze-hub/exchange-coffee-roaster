@@ -1,25 +1,26 @@
 /* =========================================
    RESET
 ========================================= */
+
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 html {
-    background: #e9e1d5;
+    scroll-behavior: smooth;
 }
 
 body {
-    background: #e9e1d5;
-    color: #2d211b;
+    margin: 0;
+    padding: 0;
+
     font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Helvetica Neue",
         Arial,
+        Helvetica,
         sans-serif;
+
+    background: #f7f2e9;
+    color: #3b2921;
 }
 
 button {
@@ -28,15 +29,16 @@ button {
 
 
 /* =========================================
-   PAGE
+   MAIN PAGE
 ========================================= */
 
 .anniversary-page {
     width: 100%;
-    max-width: 620px;
-    min-height: 100vh;
+    max-width: 720px;
     margin: 0 auto;
+
     overflow: hidden;
+
     background: #f7f2e9;
 }
 
@@ -67,10 +69,11 @@ button {
 }
 
 
-/* subtle decorative circles */
+/* Decorative outer circle */
 
 .hero-section::before {
     content: "";
+
     position: absolute;
 
     width: 230px;
@@ -81,14 +84,21 @@ button {
 
     transform: translate(-50%, -45%);
 
-    border: 1px solid rgba(164, 97, 62, 0.12);
+    border:
+        1px solid
+        rgba(164, 97, 62, 0.12);
+
     border-radius: 50%;
 
     pointer-events: none;
 }
 
+
+/* Decorative inner circle */
+
 .hero-section::after {
     content: "";
+
     position: absolute;
 
     width: 180px;
@@ -99,7 +109,10 @@ button {
 
     transform: translate(-50%, -45%);
 
-    border: 1px solid rgba(164, 97, 62, 0.08);
+    border:
+        1px solid
+        rgba(164, 97, 62, 0.08);
+
     border-radius: 50%;
 
     pointer-events: none;
@@ -108,6 +121,7 @@ button {
 
 .hero-content {
     position: relative;
+
     z-index: 1;
 
     width: 100%;
@@ -115,46 +129,55 @@ button {
 
 
 /* =========================================
-   BRAND
+   COFFEE SHOP NAME
 ========================================= */
 
 .anniversary-label {
-    font-size: 18px;
+    margin: 0 0 24px;
+
+    font-size: 20px;
+    line-height: 1.3;
+
+    font-weight: 600;
 
     letter-spacing: 3px;
 
-    margin-bottom: 20px;
-
-    color: #806554;
+    color: #704631;
 }
 
 
 /* =========================================
-   MAIN TITLE
+   1ST ANNIVERSARY
 ========================================= */
 
-.hero-content h1 {
-    font-size: 48px;
+.hero-section h1 {
+    margin: 0;
 
+    font-size: 48px;
     line-height: 0.95;
+
+    font-weight: 500;
 
     letter-spacing: 2px;
 
-    margin: 0;
-
-    color: #3b281e;
+    color: #2e211b;
 }
 
 
+/* =========================================
+   DATE
+========================================= */
+
 .anniversary-date {
-    margin-top: 32px;
+    margin: 28px 0 0;
 
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 14px;
 
-    letter-spacing: 4px;
+    letter-spacing: 5px;
 
-    color: #a4613e;
+    font-weight: 500;
+
+    color: #8b6653;
 }
 
 
@@ -163,80 +186,59 @@ button {
 ========================================= */
 
 .reward-section {
-    position: relative;
-
-    margin: 0 18px 0;
-    padding: 55px 25px 60px;
+    padding: 70px 28px 65px;
 
     text-align: center;
 
-    background: #3b2920;
-    color: #f8f1e7;
+    background: #2f211b;
 
-    border-radius: 3px;
-
-    box-shadow:
-        0 18px 45px rgba(55, 38, 28, 0.18);
-}
-
-
-/* small top line */
-
-.reward-section::before {
-    content: "";
-
-    position: absolute;
-
-    top: 24px;
-    left: 50%;
-
-    width: 42px;
-    height: 1px;
-
-    transform: translateX(-50%);
-
-    background: #c48b68;
+    color: #f7f2e9;
 }
 
 
 .section-label {
-    font-size: 9px;
-    font-weight: 700;
+    margin: 0 0 22px;
 
-    letter-spacing: 3px;
+    font-size: 12px;
 
-    color: #c9a58f;
+    letter-spacing: 4px;
+
+    font-weight: 600;
+
+    color: #c9a88f;
 }
 
 
 .reward-section h2 {
-    margin-top: 22px;
+    margin: 0;
 
-    font-family: Georgia, "Times New Roman", serif;
+    font-size: 54px;
 
-    font-size: clamp(48px, 13vw, 76px);
-    line-height: 0.86;
+    line-height: 0.95;
 
-    letter-spacing: -3px;
+    font-weight: 500;
 
-    color: #fff7ed;
-}
+    letter-spacing: 2px;
 
-
-.reward-section h2::first-line {
-    color: #fff7ed;
+    color: #ffffff;
 }
 
 
 .reward-description {
-    max-width: 330px;
+    max-width: 430px;
 
-    margin: 22px auto 0;
+    margin: 25px auto 0;
 
-    font-size: 13px;
-    line-height: 1.65;
+    font-size: 15px;
 
-    color: #d9c9bc;
+    line-height: 1.7;
+
+    color: #d9c9bd;
+}
+
+
+.reward-description + .reward-description {
+    margin-top: 4px;
 }
 
 
@@ -245,7 +247,7 @@ button {
 ========================================= */
 
 .claim-section {
-    padding: 48px 25px 55px;
+    padding: 60px 28px 70px;
 
     text-align: center;
 
@@ -254,14 +256,15 @@ button {
 
 
 .claim-note {
-    max-width: 320px;
+    max-width: 400px;
 
-    margin: 0 auto 22px;
+    margin: 0 auto 28px;
 
-    font-size: 12px;
-    line-height: 1.65;
+    font-size: 13px;
 
-    color: #806e62;
+    line-height: 1.7;
+
+    color: #806c61;
 }
 
 
@@ -275,149 +278,158 @@ button {
 
     min-height: 58px;
 
-    padding: 0 24px;
+    padding: 16px 24px;
 
     border: none;
     border-radius: 2px;
 
-    background: #a4613e;
-    color: #fffaf4;
+    background: #704631;
 
-    font-size: 12px;
-    font-weight: 700;
+    color: #ffffff;
 
-    letter-spacing: 2.5px;
+    font-size: 13px;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
 
     cursor: pointer;
 
-    box-shadow:
-        0 12px 25px rgba(164, 97, 62, 0.20);
-
     transition:
-        transform 0.2s ease,
         background 0.2s ease,
+        transform 0.2s ease,
         opacity 0.2s ease;
 }
 
 
 .claim-button:hover {
-    transform: translateY(-2px);
-
-    background: #8f5334;
+    background: #573629;
 }
 
 
 .claim-button:active {
-    transform: translateY(0);
+    transform: scale(0.98);
 }
 
 
 .claim-button:disabled {
     cursor: default;
+
     opacity: 0.65;
-    transform: none;
-}
-
-
-.claimed-button {
-    background: #655249;
 }
 
 
 /* =========================================
-   STATUS
+   CLAIMED BUTTON
 ========================================= */
 
-.status {
-    max-width: 390px;
+.claimed-button {
+    background: #8b7669 !important;
 
-    margin: 18px auto 0;
-    padding: 13px 16px;
-
-    border-radius: 3px;
-
-    font-size: 12px;
-    line-height: 1.5;
-
-    text-align: center;
+    cursor: default !important;
 }
 
 
-.status.info,
-.status.connected,
+/* =========================================
+   STATUS MESSAGE
+========================================= */
+
+.status {
+    max-width: 430px;
+
+    margin: 22px auto 0;
+
+    min-height: 24px;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
 .status.checking {
-    background: #ebe3d8;
-    color: #604d40;
+    color: #806c61;
+}
+
+
+.status.info {
+    color: #806c61;
+}
+
+
+.status.connected {
+    color: #5e7a61;
 }
 
 
 .status.success {
-    background: #e3eadf;
-    color: #40583b;
-
-    border: 1px solid #c4d2bc;
+    color: #58705a;
 }
 
 
 .status.error {
-    background: #f1dfdc;
-    color: #75413d;
-
-    border: 1px solid #dfc0bb;
+    color: #a04f42;
 }
 
 
 /* =========================================
-   ALREADY CLAIMED
+   ALREADY CLAIMED CARD
 ========================================= */
 
 .claimed-card {
-    margin: 0 18px 50px;
-    padding: 42px 25px;
+    margin: 0 28px 60px;
+
+    padding: 35px 25px;
 
     text-align: center;
 
-    background: #fffaf3;
+    border:
+        1px solid
+        rgba(112, 70, 49, 0.18);
 
-    border: 1px solid #dfd3c6;
-    border-radius: 3px;
+    background: #efe7dc;
 }
 
 
-.hidden {
+.claimed-card.hidden {
     display: none;
 }
 
 
 .claimed-card-label {
-    font-size: 9px;
-    font-weight: 700;
+    margin-bottom: 16px;
+
+    font-size: 11px;
 
     letter-spacing: 3px;
 
-    color: #99735d;
+    font-weight: 600;
+
+    color: #8b6653;
 }
 
 
 .claimed-card h3 {
-    margin-top: 17px;
+    margin: 0;
 
-    font-family: Georgia, "Times New Roman", serif;
+    font-size: 22px;
 
-    font-size: 28px;
-    line-height: 1.05;
+    line-height: 1.25;
 
-    color: #39271e;
+    font-weight: 500;
+
+    color: #3b2921;
 }
 
 
 .claimed-card p {
-    margin-top: 15px;
+    margin: 15px 0 0;
 
     font-size: 13px;
-    line-height: 1.65;
 
-    color: #776257;
+    line-height: 1.6;
+
+    color: #806c61;
 }
 
 
@@ -426,62 +438,69 @@ button {
 ========================================= */
 
 .reward-result {
-    margin: 0 18px 55px;
-    padding: 42px 22px;
+    margin: 45px auto 0;
+
+    max-width: 430px;
+
+    padding: 35px 25px 40px;
 
     text-align: center;
 
-    background: #fffaf3;
+    background: #ffffff;
 
-    border: 1px solid #dfd3c6;
-    border-radius: 3px;
+    border:
+        1px solid
+        rgba(112, 70, 49, 0.15);
 
     box-shadow:
-        0 12px 30px rgba(55, 38, 28, 0.08);
+        0 8px 30px
+        rgba(60, 40, 30, 0.08);
 }
 
 
 .reward-result-label {
-    font-size: 9px;
-    font-weight: 700;
+    margin-bottom: 14px;
+
+    font-size: 11px;
 
     letter-spacing: 3px;
 
-    color: #99735d;
+    font-weight: 600;
+
+    color: #8b6653;
 }
 
 
 .reward-result-title {
-    margin-top: 15px;
+    font-size: 23px;
 
-    font-family: Georgia, "Times New Roman", serif;
+    line-height: 1.25;
 
-    font-size: 31px;
-    line-height: 1;
+    font-weight: 600;
 
-    color: #39271e;
+    color: #3b2921;
 }
 
 
 .reward-result-type {
-    margin-top: 18px;
+    margin-top: 14px;
 
-    font-family: Georgia, "Times New Roman", serif;
+    font-size: 20px;
 
-    font-size: 29px;
-    font-weight: 700;
+    letter-spacing: 1px;
 
-    color: #a4613e;
+    font-weight: 600;
+
+    color: #704631;
 }
 
 
 .reward-result-date {
-    margin-top: 10px;
+    margin-top: 8px;
 
-    font-size: 11px;
-    letter-spacing: 0.5px;
+    font-size: 12px;
 
-    color: #776257;
+    color: #806c61;
 }
 
 
@@ -490,20 +509,17 @@ button {
 ========================================= */
 
 .reward-qr {
-    width: 250px;
-    height: 250px;
-
-    margin: 28px auto;
-
-    padding: 5px;
-
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    background: #ffffff;
+    margin: 30px auto;
 
-    border: 1px solid #ddd2c5;
+    width: 240px;
+    height: 240px;
+
+    background: #ffffff;
 }
 
 
@@ -513,7 +529,7 @@ button {
     width: 240px;
     height: 240px;
 
-    max-width: 100%;
+    object-fit: contain;
 }
 
 
@@ -522,53 +538,86 @@ button {
 ========================================= */
 
 .reward-code-label {
-    margin-top: 8px;
+    margin-top: 20px;
 
-    font-size: 9px;
-    font-weight: 700;
+    font-size: 10px;
 
     letter-spacing: 3px;
 
-    color: #99735d;
+    font-weight: 600;
+
+    color: #8b6653;
 }
 
 
 .reward-code {
-    margin: 10px auto 0;
-    padding: 14px 15px;
+    margin-top: 8px;
 
-    max-width: 300px;
-
-    background: #eee5d9;
-
-    border-radius: 3px;
-
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        "Liberation Mono",
-        monospace;
-
-    font-size: 14px;
-    font-weight: 600;
-
-    letter-spacing: 1px;
+    padding: 14px 12px;
 
     word-break: break-all;
 
-    color: #39271e;
+    font-size: 16px;
+
+    letter-spacing: 2px;
+
+    font-weight: 600;
+
+    color: #3b2921;
+
+    background: #f3eee7;
+
+    border:
+        1px solid
+        rgba(112, 70, 49, 0.12);
 }
 
 
 .reward-instruction {
-    max-width: 300px;
+    margin-top: 20px;
 
-    margin: 18px auto 0;
+    font-size: 12px;
 
-    font-size: 11px;
-    line-height: 1.65;
+    line-height: 1.7;
 
-    color: #887367;
+    color: #806c61;
+}
+
+
+/* =========================================
+   INFORMATION SECTION
+========================================= */
+
+.info-section {
+    padding: 45px 28px 55px;
+
+    text-align: center;
+
+    background: #eee5da;
+
+    border-top:
+        1px solid
+        rgba(112, 70, 49, 0.08);
+}
+
+
+.info-section p {
+    max-width: 430px;
+
+    margin: 8px auto;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+
+    color: #806c61;
+}
+
+
+.info-section strong {
+    color: #704631;
+
+    font-weight: 600;
 }
 
 
@@ -576,71 +625,119 @@ button {
    MOBILE
 ========================================= */
 
-@media (max-width: 420px) {
+@media (max-width: 480px) {
 
     .hero-section {
         min-height: 500px;
 
         padding:
-            45px 20px
+            45px 22px
             55px;
     }
 
-    .hero-content h1 {
-        font-size: 68px;
-        letter-spacing: -4px;
+
+    .hero-section::before {
+        width: 210px;
+        height: 210px;
     }
+
+
+    .hero-section::after {
+        width: 165px;
+        height: 165px;
+    }
+
+
+    .anniversary-label {
+        font-size: 16px;
+
+        letter-spacing: 2.5px;
+
+        margin-bottom: 20px;
+    }
+
+
+    .hero-section h1 {
+        font-size: 42px;
+
+        letter-spacing: 1px;
+    }
+
+
+    .anniversary-date {
+        margin-top: 24px;
+
+        font-size: 12px;
+
+        letter-spacing: 4px;
+    }
+
 
     .reward-section {
-        margin-left: 12px;
-        margin-right: 12px;
-
-        padding-left: 20px;
-        padding-right: 20px;
+        padding:
+            60px 22px
+            55px;
     }
+
 
     .reward-section h2 {
-        font-size: 51px;
+        font-size: 46px;
     }
+
+
+    .reward-description {
+        font-size: 14px;
+    }
+
 
     .claim-section {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding:
+            50px 22px
+            60px;
     }
 
-    .reward-qr {
-        width: 230px;
-        height: 230px;
+
+    .claimed-card {
+        margin:
+            0 22px
+            50px;
     }
 
-    .reward-qr img {
-        width: 220px;
-        height: 220px;
+
+    .reward-result {
+        padding:
+            30px 20px
+            35px;
     }
 }
 
 
 /* =========================================
-   DESKTOP
+   VERY SMALL PHONES
 ========================================= */
 
-@media (min-width: 700px) {
+@media (max-width: 360px) {
 
-    body {
-        padding: 30px 0;
+    .anniversary-label {
+        font-size: 14px;
+
+        letter-spacing: 2px;
     }
 
-    .anniversary-page {
-        box-shadow:
-            0 0 60px rgba(45, 33, 27, 0.13);
+
+    .hero-section h1 {
+        font-size: 36px;
     }
 
-    .hero-section {
-        min-height: 620px;
+
+    .reward-section h2 {
+        font-size: 40px;
     }
 
-    .reward-section {
-        margin-left: 35px;
-        margin-right: 35px;
+
+    .reward-qr,
+    .reward-qr img {
+        width: 210px;
+        height: 210px;
     }
 }
