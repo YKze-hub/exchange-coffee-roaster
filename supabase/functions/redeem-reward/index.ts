@@ -213,21 +213,24 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Create redemption record
+        // Redeem reward using a database transaction
     const {
-      data: redemption,
-      error: redemptionError,
-    } = await supabase
-      .from("redemptions")
-      .insert({
-        reward_id: reward.id,
-        redeemed_at: now.toISOString(),
-      })
-      .select()
-      .single();
+      data: redeemedReward,
+      error: redeemError,
+    } = await supabase.rpc(
+      "redeem_reward",
+      {
+        p_reward_id: reward.id,
+        p_redeemed_at: now.toISOString(),
+      }
+    );
 
-    if (redemptionError) {
-      if (redemptionError.code === "23505") {
+    if (redeemError) {
+      if (
+        redeemError.message.includes(
+          "Reward already redeemed"
+        )
+      ) {
         return new Response(
           JSON.stringify({
             success: false,
@@ -237,47 +240,12 @@ Deno.serve(async (req) => {
             status: 409,
             headers: {
               ...corsHeaders,
-              "Content-Type": "application/json",
+              "Content-Type":
+                "application/json",
             },
           }
         );
       }
-
-      return new Response(
-        JSON.stringify({
-          success: false,
-          error: redemptionError.message,
-        }),
-        {
-          status: 500,
-          headers: {
-            ...corsHeaders,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    }
-
-    // Mark reward as redeemed
-    const {
-      data: redeemedReward,
-      error: redeemError,
-    } = await supabase
-      .from("rewards")
-      .update({
-        status: "redeemed",
-        redeemed_at: now.toISOString(),
-      })
-      .eq("id", reward.id)
-      .eq("status", "claimed")
-      .select()
-      .single();
-
-    if (redeemError) {
-      await supabase
-        .from("redemptions")
-        .delete()
-        .eq("id", redemption.id);
 
       return new Response(
         JSON.stringify({
@@ -288,11 +256,39 @@ Deno.serve(async (req) => {
           status: 500,
           headers: {
             ...corsHeaders,
-            "Content-Type": "application/json",
+            "Content-Type":
+              "application/json",
           },
         }
       );
     }
+
+    // Success
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message:
+          "Reward redeemed successfully",
+        reward: {
+          reward_token:
+            redeemedReward.reward_token,
+          reward_type:
+            redeemedReward.reward_type,
+          status:
+            redeemedReward.status,
+          redeemed_at:
+            redeemedReward.redeemed_at,
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type":
+            "application/json",
+        },
+      }
+    );
 
     return new Response(
       JSON.stringify({
