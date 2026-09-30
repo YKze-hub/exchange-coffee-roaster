@@ -1,0 +1,286 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+Deno.serve(async (req) => {
+  try {
+    // Only allow POST requests
+    if (req.method !== "POST") {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Method not allowed",
+        }),
+        {
+          status: 405,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // Supabase connection
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    const supabase = createClient(
+      supabaseUrl,
+      serviceRoleKey
+    );
+
+    // Read request body
+    const body = await req.json();
+
+    const lineUserId = body.line_user_id;
+    const displayName = body.display_name ?? null;
+
+    if (!lineUserId) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "line_user_id is required",
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // Campaign we are testing
+    const campaignCode = "DEV-TEST-2026";
+
+    // Find campaign
+    const { data: campaign, error: campaignError } =
+      await supabase
+        .from("campaigns")
+        .select("*")
+        .eq("campaign_code", campaignCode)
+        .single();
+
+    if (campaignError || !campaign) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Campaign not found",
+        }),
+        {
+          status: 404,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // Check claim period
+    const now = new Date();
+
+    const claimStart = new Date(campaign.claim_start);
+    const claimEnd = new Date(campaign.claim_end);
+
+    if (now < claimStart || now > claimEnd) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Claim period is not active",
+        }),
+        {
+          status: 400,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // Find existing customer
+    let { data: customer, error: customerError } =
+      await supabase
+        .from("customers")
+        .select("*")
+        .eq("line_user_id", lineUserId)
+        .maybeSingle();
+
+    if (customerError) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: customerError.message,
+        }),
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // Create customer if they don't exist
+    if (!customer) {
+      const { data: newCustomer, error: createCustomerError } =
+        await supabase
+          .from("customers")
+          .insert({
+            line_user_id: lineUserId,
+            display_name: displayName,
+          })
+          .select()
+          .single();
+
+      if (createCustomerError) {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: createCustomerError.message,
+          }),
+          {
+            status: 500,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+
+      customer = newCustomer;
+    }
+
+    // Check whether this customer already claimed this campaign
+    const { data: existingReward, error: existingRewardError } =
+      await supabase
+        .from("rewards")
+        .select("*")
+        .eq("customer_id", customer.id)
+        .eq("campaign_id", campaign.id)
+        .maybeSingle();
+
+    if (existingRewardError) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: existingRewardError.message,
+        }),
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    if (existingReward) {
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: "Already claimed",
+          reward: {
+            reward_token: existingReward.reward_token,
+            status: existingReward.status,
+            claimed_at: existingReward.claimed_at,
+          },
+        }),
+        {
+          status: 409,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // Generate unique reward token
+    const rewardToken =
+      `EX1-${crypto.randomUUID().replaceAll("-", "").slice(0, 12).toUpperCase()}`;
+
+    // Reward expires at the end of the campaign
+    const expiresAt = campaign.claim_end;
+
+    // Create reward
+    const { data: reward, error: rewardError } =
+      await supabase
+        .from("rewards")
+        .insert({
+          customer_id: customer.id,
+          campaign_id: campaign.id,
+          reward_type: "BUY_ONE_GET_ONE",
+          reward_token: rewardToken,
+          status: "claimed",
+          claimed_at: now.toISOString(),
+          expires_at: expiresAt,
+        })
+        .select()
+        .single();
+
+    if (rewardError) {
+      // Database unique constraint protects against duplicate claims
+      if (rewardError.code === "23505") {
+        return new Response(
+          JSON.stringify({
+            success: false,
+            error: "Already claimed",
+          }),
+          {
+            status: 409,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: rewardError.message,
+        }),
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    }
+
+    // Success
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: "Reward claimed successfully",
+        reward: {
+          reward_token: reward.reward_token,
+          reward_type: reward.reward_type,
+          status: reward.status,
+          claimed_at: reward.claimed_at,
+          expires_at: reward.expires_at,
+        },
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown error",
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+  }
+});

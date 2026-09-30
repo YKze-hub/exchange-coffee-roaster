@@ -1,0 +1,407 @@
+:root {
+    --ink: #171612;
+    --paper: #eee8dc;
+    --cream: #f7f2e8;
+    --copper: #b56f43;
+    --copper-light: #cf8a5d;
+    --steel: #777267;
+    --line: rgba(23, 22, 18, 0.15);
+
+    --serif: Georgia, "Times New Roman", serif;
+    --mono: "Courier New", monospace;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    background: var(--ink);
+    color: var(--cream);
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+.anniversary {
+    min-height: 100vh;
+
+    max-width: 760px;
+
+    margin: 0 auto;
+
+    padding:
+        70px
+        28px
+        50px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+}
+
+
+/* --------------------------------
+   HEADER
+-------------------------------- */
+
+.eyebrow {
+    font-family: var(--mono);
+
+    font-size: 10px;
+
+    letter-spacing: 0.16em;
+
+    color: var(--copper-light);
+
+    margin-bottom: 22px;
+}
+
+
+.year {
+    font-family: var(--mono);
+
+    font-size: 11px;
+
+    letter-spacing: 0.12em;
+
+    color: var(--steel);
+
+    margin-bottom: 30px;
+}
+
+
+/* --------------------------------
+   TITLE
+-------------------------------- */
+
+h1 {
+    font-family: var(--serif);
+
+    font-weight: 400;
+
+    font-size:
+        clamp(52px, 12vw, 92px);
+
+    line-height: 0.92;
+
+    letter-spacing: -0.04em;
+
+    margin: 0 0 30px;
+}
+
+
+.intro {
+    max-width: 460px;
+
+    color: #c9c2b5;
+
+    font-size: 15px;
+
+    line-height: 1.75;
+
+    margin-bottom: 45px;
+}
+
+
+/* --------------------------------
+   REWARD CARD
+-------------------------------- */
+
+.reward-card {
+
+    width: 100%;
+
+    max-width: 480px;
+
+    padding:
+        38px
+        28px;
+
+    border:
+        1px solid
+        rgba(181, 111, 67, 0.7);
+
+    background:
+        linear-gradient(
+            145deg,
+            #211f1a,
+            #181714
+        );
+
+    margin-bottom: 28px;
+}
+
+
+.reward-label {
+
+    font-family: var(--mono);
+
+    font-size: 9px;
+
+    letter-spacing: 0.16em;
+
+    color: var(--copper-light);
+
+    margin-bottom: 22px;
+}
+
+
+.reward-card h2 {
+
+    font-family: var(--serif);
+
+    font-size: 42px;
+
+    line-height: 0.95;
+
+    font-weight: 400;
+
+    margin: 0 0 24px;
+
+    letter-spacing: -0.02em;
+}
+
+
+.reward-card p {
+
+    color: #aaa398;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+
+    margin: 7px 0;
+}
+
+
+.reward-card strong {
+
+    color: var(--cream);
+
+    font-weight: 500;
+}
+
+
+/* --------------------------------
+   BUTTON
+-------------------------------- */
+
+.primary-button {
+
+    width: 100%;
+
+    max-width: 480px;
+
+    border: none;
+
+    background: var(--copper);
+
+    color: var(--ink);
+
+    padding: 17px 20px;
+
+    font-family: var(--mono);
+
+    font-size: 11px;
+
+    letter-spacing: 0.1em;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.primary-button:hover {
+
+    background: var(--copper-light);
+
+    transform: translateY(-1px);
+}
+
+
+.primary-button:active {
+
+    transform: translateY(0);
+}
+
+
+/* --------------------------------
+   STATUS
+-------------------------------- */
+
+.status {
+
+    min-height: 20px;
+
+    margin:
+        16px
+        0
+        20px;
+
+    color: var(--steel);
+
+    font-family: var(--mono);
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+
+/* --------------------------------
+   MESSAGE
+-------------------------------- */
+
+.message-card {
+
+    width: 100%;
+
+    max-width: 480px;
+
+    border:
+        1px solid
+        var(--line);
+
+    padding: 30px;
+
+    background: #211f1a;
+}
+
+
+.message-card h2 {
+
+    font-family: var(--serif);
+
+    font-weight: 400;
+
+    font-size: 28px;
+
+    margin:
+        15px
+        0
+        10px;
+}
+
+
+.message-card p {
+
+    color: #aaa398;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+.success-mark {
+
+    width: 42px;
+
+    height: 42px;
+
+    margin: 0 auto;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: var(--copper);
+
+    color: var(--ink);
+
+    font-family: var(--mono);
+}
+
+
+.hidden {
+    display: none;
+}
+
+
+/* --------------------------------
+   FOOTER
+-------------------------------- */
+
+footer {
+
+    margin-top: auto;
+
+    padding-top: 70px;
+
+    color: #615d54;
+
+    font-family: var(--mono);
+
+    font-size: 9px;
+
+    line-height: 1.7;
+
+    letter-spacing: 0.08em;
+}
+
+
+/* --------------------------------
+   MOBILE
+-------------------------------- */
+
+@media (max-width: 600px) {
+
+    .anniversary {
+
+        padding:
+            48px
+            20px
+            35px;
+    }
+
+
+    h1 {
+
+        font-size: 60px;
+    }
+
+
+    .intro {
+
+        font-size: 14px;
+    }
+
+
+    .reward-card {
+
+        padding:
+            32px
+            20px;
+    }
+
+
+    .reward-card h2 {
+
+        font-size: 36px;
+    }
+
+}
