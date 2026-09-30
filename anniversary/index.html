@@ -2,115 +2,170 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-<title>Exchange Coffee — 1st Anniversary</title>
-<link
-    rel="stylesheet"
-    href="anniversary.css"
->
-<script
-    src="https://static.line-scdn.net/liff/edge/2/sdk.js"
-></script>
+
+    <title>Exchange Coffee — 1st Anniversary</title>
+
+    <link
+        rel="stylesheet"
+        href="anniversary.css"
+    >
+
+    <script
+        src="https://static.line-scdn.net/liff/edge/2/sdk.js"
+    ></script>
 </head>
+
 <body>
+
 <main class="anniversary-page">
-<section class="hero-section">
-    <div class="hero-content">
-        <p class="anniversary-label">
+
+    <!-- Decorative celebration elements -->
+    <div class="confetti confetti-1"></div>
+    <div class="confetti confetti-2"></div>
+    <div class="confetti confetti-3"></div>
+    <div class="confetti confetti-4"></div>
+
+    <!-- HERO -->
+    <section class="hero-section">
+
+        <div class="coffee-decoration coffee-decoration-left">
+            ☕
+        </div>
+
+        <div class="coffee-decoration coffee-decoration-right">
+            ✦
+        </div>
+
+        <div class="hero-content">
+
+            <p class="anniversary-label">
+                EXCHANGE COFFEE &amp; ROASTER
+            </p>
+
+            <p class="little-celebration">
+                ✦ ONE YEAR TOGETHER ✦
+            </p>
+
+            <h1>
+                1 YEAR
+                <span>ANNIVERSARY</span>
+            </h1>
+
+            <div class="hero-line"></div>
+
+            <p class="hero-message">
+                One year of coffee,
+                conversations &amp; connections.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- REWARD -->
+    <section class="reward-section">
+
+        <div class="reward-star">
+            ✦
+        </div>
+
+        <p class="section-label">
+            A LITTLE THANK YOU
+        </p>
+
+        <h2>
+            BUY ONE
+            <span>GET ONE</span>
+        </h2>
+
+        <p class="reward-description">
+            Celebrate our first year with us
+            and enjoy a coffee on the house.
+        </p>
+
+    </section>
+
+
+    <!-- CLAIM -->
+    <section class="claim-section">
+
+        <button
+            id="loginButton"
+            class="claim-button"
+            type="button"
+        >
+            CLAIM MY REWARD
+        </button>
+
+        <button
+            id="historyButton"
+            class="history-button"
+            type="button"
+        >
+            MY REWARDS
+        </button>
+
+        <div
+            id="statusMessage"
+            class="status"
+        >
+            Loading...
+        </div>
+
+    </section>
+
+
+    <!-- REWARD INFORMATION -->
+    <section class="info-section">
+
+        <div class="info-decoration">
+            ♡
+        </div>
+
+        <p>
+            Your reward is connected
+            to your LINE account.
+        </p>
+
+        <p>
+            Redeem from
+            <strong>8 October 2026</strong>.
+        </p>
+
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="anniversary-footer">
+
+        <p>
+            THANK YOU FOR BEING PART OF OUR FIRST YEAR.
+        </p>
+
+        <span>
             EXCHANGE COFFEE &amp; ROASTER
-        </p>
-        <h1>
-            1ST<br>
-            ANNIVERSARY
-        </h1>
-        <p class="anniversary-date">
-            OCTOBER 2026
-        </p>
-    </div>
-</section>
-<section class="reward-section">
-    <p class="section-label">
-        ANNIVERSARY REWARD
-    </p>
-    <h2>
-        BUY ONE<br>
-        GET ONE
-    </h2>
-    <p class="reward-description">
-        Thank you for being part of our first year.
-    </p>
-    <p class="reward-description">
-        Claim your anniversary reward through LINE.
-    </p>
-</section>
-<section class="claim-section">
-    <p class="claim-note">
-        Your anniversary reward is connected to your LINE account.
-    </p>
-    <button
-        id="loginButton"
-        class="claim-button"
-        type="button"
-    >
-        CLAIM MY REWARD
-    </button>
+        </span>
 
-    <button
-    id="historyButton"
-    class="history-button"
-    type="button"
-    >
-    MY REWARDS
-    </button>
+    </footer>
 
-    <div
-        id="statusMessage"
-        class="status"
-    >
-        Loading...
-    </div>
-</section>
-<section
-    id="alreadyClaimed"
-    class="claimed-card hidden"
->
-    <div class="claimed-card-label">
-        ANNIVERSARY REWARD
-    </div>
-    <h3>
-        YOU HAVE ALREADY CLAIMED YOUR REWARD.
-    </h3>
-    <p>
-        Your reward is connected to your LINE account.
-    </p>
-    <p>
-        Please use your reward code when redeeming.
-    </p>
-</section>
-<section class="info-section">
-    <p>
-        Redemption starts
-        <strong>8 October 2026</strong>.
-    </p>
-    <p>
-        Show your reward QR code or reward code
-        to our staff.
-    </p>
-</section>
 </main>
+
+
 <script>
+
 const LIFF_ID =
     "2011803432-8wUZVBDB";
 
 const CLAIM_FUNCTION_URL =
     "https://wbjwcavloaqlsuzyskug.supabase.co/functions/v1/claim-reward";
 
-/* =========================================
-   INITIALIZE LIFF
-========================================= */
+
 async function initializeLIFF() {
 
     const status =
@@ -118,9 +173,10 @@ async function initializeLIFF() {
 
     const loginButton =
         document.getElementById("loginButton");
-    
+
     const historyButton =
-    document.getElementById("historyButton");    
+        document.getElementById("historyButton");
+
 
     try {
 
@@ -130,20 +186,21 @@ async function initializeLIFF() {
         status.className =
             "status checking";
 
+
         await liff.init({
             liffId: LIFF_ID
         });
 
-        console.log("LIFF initialized");
 
-        /*
-         * If the user is not logged in,
-         * ask LINE to log them in.
-         */
+        console.log(
+            "LIFF initialized"
+        );
+
+
         if (!liff.isLoggedIn()) {
 
             status.textContent =
-                "Please log in with LINE to claim your reward.";
+                "Connect with LINE to get your reward.";
 
             status.className =
                 "status info";
@@ -154,26 +211,30 @@ async function initializeLIFF() {
             loginButton.onclick =
                 loginWithLINE;
 
+            historyButton.onclick =
+                loginWithLINE;
+
             return;
         }
 
-        /*
-         * User is already logged in.
-         */
+
         status.textContent =
             "You're connected with LINE.";
 
         status.className =
             "status connected";
 
+
         loginButton.textContent =
             "CLAIM MY REWARD";
 
         loginButton.onclick =
             checkReward;
-        
+
+
         historyButton.onclick =
             loadRewardHistory;
+
 
     } catch (error) {
 
@@ -183,30 +244,30 @@ async function initializeLIFF() {
         );
 
         status.textContent =
-            "Unable to connect to LINE. Please try again.";
+            "Unable to connect to LINE.";
 
         status.className =
             "status error";
+
     }
+
 }
 
 
-/* =========================================
-   LINE LOGIN
-========================================= */
 function loginWithLINE() {
 
-    console.log("Starting LINE login...");
+    console.log(
+        "Starting LINE login..."
+    );
 
     liff.login({
-        redirectUri: window.location.href
+        redirectUri:
+            window.location.href
     });
+
 }
 
 
-/* =========================================
-   CLAIM REWARD
-========================================= */
 async function checkReward() {
 
     const status =
@@ -215,30 +276,30 @@ async function checkReward() {
     const loginButton =
         document.getElementById("loginButton");
 
+
     try {
 
-        loginButton.disabled = true;
+        loginButton.disabled =
+            true;
+
 
         status.textContent =
-            "Getting your LINE account information...";
+            "Checking your reward...";
 
         status.className =
             "status checking";
 
 
-        /* =================================
-           MAKE SURE LIFF SESSION IS ACTIVE
-        ================================= */
-
         if (!liff.isLoggedIn()) {
 
             status.textContent =
-                "Please log in with LINE first.";
+                "Please log in with LINE.";
 
             status.className =
                 "status error";
 
-            loginButton.disabled = false;
+            loginButton.disabled =
+                false;
 
             loginWithLINE();
 
@@ -246,38 +307,28 @@ async function checkReward() {
         }
 
 
-        /* =================================
-           GET LINE ID TOKEN
-        ================================= */
-
         const idToken =
             liff.getIDToken();
 
-        console.log(
-            "ID token exists:",
-            Boolean(idToken)
-        );
 
         if (!idToken) {
 
             status.textContent =
-                "Your LINE session has expired. Please log in again.";
+                "Refreshing your LINE login...";
 
             status.className =
-                "status error";
+                "status checking";
 
-            loginButton.disabled = false;
+            liff.logout();
+
+            liff.login({
+                redirectUri:
+                    window.location.href
+            });
 
             return;
         }
 
-
-        /* =================================
-           SEND TOKEN TO SUPABASE
-        ================================= */
-
-        status.textContent =
-            "Checking your reward...";
 
         const response =
             await fetch(
@@ -291,7 +342,8 @@ async function checkReward() {
                     },
 
                     body: JSON.stringify({
-                        id_token: idToken
+                        id_token:
+                            idToken
                     })
                 }
             );
@@ -300,6 +352,7 @@ async function checkReward() {
         const result =
             await response.json();
 
+
         console.log(
             "Claim response:",
             response.status,
@@ -307,89 +360,76 @@ async function checkReward() {
         );
 
 
-        /* =================================
-           SUCCESS
-        ================================= */
+        if (
+            response.status === 401 &&
+            result.error ===
+                "Invalid LINE ID token"
+        ) {
+
+            status.textContent =
+                "Refreshing your LINE login...";
+
+            status.className =
+                "status checking";
+
+            liff.logout();
+
+            liff.login({
+                redirectUri:
+                    window.location.href
+            });
+
+            return;
+        }
+
 
         if (result.success) {
 
-            status.textContent =
-                "Your anniversary reward has been claimed!";
+            if (result.existing) {
+
+                status.textContent =
+                    "Welcome back — your reward is ready.";
+
+            } else {
+
+                status.textContent =
+                    "Your anniversary reward is ready!";
+
+            }
 
             status.className =
                 "status success";
 
+
             loginButton.textContent =
-                "REWARD CLAIMED";
+                "REWARD READY";
 
             loginButton.classList.add(
                 "claimed-button"
             );
 
-            loginButton.disabled = true;
-
-            showReward(result.reward);
-
-            return;
-        }
+            loginButton.disabled =
+                true;
 
 
-        /* =================================
-           ALREADY CLAIMED
-        ================================= */
-
-        if (
-            response.status === 409 &&
-            result.error === "Already claimed"
-        ) {
-
-            status.textContent =
-                "You have already claimed your anniversary reward.";
-
-            status.className =
-                "status success";
-
-            loginButton.textContent =
-                "ALREADY CLAIMED";
-
-            loginButton.classList.add(
-                "claimed-button"
+            showReward(
+                result.reward
             );
 
-            loginButton.disabled = true;
-
-            document
-                .getElementById("alreadyClaimed")
-                .classList
-                .remove("hidden");
-
             return;
         }
 
 
-        /* =================================
-           TOKEN ERROR
-        ================================= */
-
-        if (
-            result.line_error &&
-            result.line_error.error_description
-        ) {
-
-            status.textContent =
-                result.line_error.error_description;
-
-        } else {
-
-            status.textContent =
-                result.error ||
-                "Unable to claim your reward.";
-        }
+        status.textContent =
+            result.error ||
+            "Unable to claim your reward.";
 
         status.className =
             "status error";
 
-        loginButton.disabled = false;
+
+        loginButton.disabled =
+            false;
 
 
     } catch (error) {
@@ -405,56 +445,75 @@ async function checkReward() {
         status.className =
             "status error";
 
-        loginButton.disabled = false;
+        loginButton.disabled =
+            false;
+
     }
+
 }
+
+
 async function loadRewardHistory() {
+
     const status =
         document.getElementById("statusMessage");
 
     const historyButton =
         document.getElementById("historyButton");
 
+
     try {
-        historyButton.disabled = true;
+
+        historyButton.disabled =
+            true;
+
 
         status.textContent =
-            "Loading your rewards...";
+            "Loading your reward...";
 
         status.className =
             "status checking";
 
+
         if (!liff.isLoggedIn()) {
+
             status.textContent =
-                "Please log in with LINE first.";
+                "Please log in with LINE.";
 
             status.className =
                 "status error";
 
-            historyButton.disabled = false;
+            historyButton.disabled =
+                false;
 
             loginWithLINE();
 
             return;
         }
 
-        const idToken = liff.getIDToken();
+
+        const idToken =
+            liff.getIDToken();
+
 
         if (!idToken) {
+
             status.textContent =
-            "Your LINE session has expired. Please log in again.";
+                "Refreshing your LINE login...";
 
             status.className =
-            "status error";
+                "status checking";
 
-            historyButton.disabled = false;
+            liff.logout();
 
             liff.login({
-            redirectUri: window.location.href
+                redirectUri:
+                    window.location.href
             });
 
-        return;
-}
+            return;
+        }
+
 
         const response =
             await fetch(
@@ -468,32 +527,16 @@ async function loadRewardHistory() {
                     },
 
                     body: JSON.stringify({
-                        id_token: idToken
+                        id_token:
+                            idToken
                     })
                 }
             );
 
+
         const result =
             await response.json();
-        
-            if (
-            response.status === 401 &&
-    result.error === "Invalid LINE ID token"
-) {
-    status.textContent =
-        "Refreshing your LINE login...";
 
-    status.className =
-        "status checking";
-
-    liff.logout();
-
-    liff.login({
-        redirectUri: window.location.href
-    });
-
-    return;
-}
 
         console.log(
             "Reward history response:",
@@ -501,20 +544,51 @@ async function loadRewardHistory() {
             result
         );
 
+
+        if (
+            response.status === 401 &&
+            result.error ===
+                "Invalid LINE ID token"
+        ) {
+
+            status.textContent =
+                "Refreshing your LINE login...";
+
+            status.className =
+                "status checking";
+
+            liff.logout();
+
+            liff.login({
+                redirectUri:
+                    window.location.href
+            });
+
+            return;
+        }
+
+
         if (
             result.success &&
             result.reward
         ) {
+
             status.textContent =
-                "Your reward is ready.";
+                result.existing
+                    ? "Welcome back — your reward is ready."
+                    : "Your anniversary reward is ready.";
 
             status.className =
                 "status success";
 
-            showReward(result.reward);
+
+            showReward(
+                result.reward
+            );
 
             return;
         }
+
 
         status.textContent =
             result.error ||
@@ -523,7 +597,9 @@ async function loadRewardHistory() {
         status.className =
             "status error";
 
+
     } catch (error) {
+
         console.error(
             "Reward history error:",
             error
@@ -534,15 +610,17 @@ async function loadRewardHistory() {
 
         status.className =
             "status error";
+
     } finally {
-        historyButton.disabled = false;
+
+        historyButton.disabled =
+            false;
+
     }
+
 }
 
 
-/* =========================================
-   SHOW REWARD
-========================================= */
 function showReward(reward) {
 
     const existingReward =
@@ -550,13 +628,19 @@ function showReward(reward) {
             "rewardResult"
         );
 
+
     if (existingReward) {
+
         existingReward.remove();
+
     }
 
 
     const rewardResult =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     rewardResult.id =
         "rewardResult";
@@ -566,20 +650,21 @@ function showReward(reward) {
 
 
     rewardResult.innerHTML = `
-        <div class="reward-result-label">
-            ANNIVERSARY REWARD
+
+        <div class="reward-result-top">
+            ✦ YOUR ANNIVERSARY REWARD ✦
         </div>
 
         <div class="reward-result-title">
-            YOUR REWARD IS READY.
-        </div>
-
-        <div class="reward-result-type">
-            BUY ONE GET ONE
+            BUY ONE
+            <span>GET ONE</span>
         </div>
 
         <div class="reward-result-date">
-            Redeem from 8 October 2026
+            Redeem from
+            <strong>
+                8 October 2026
+            </strong>
         </div>
 
         <div class="reward-qr">
@@ -590,7 +675,7 @@ function showReward(reward) {
         </div>
 
         <div class="reward-code-label">
-            REWARD CODE
+            YOUR REWARD CODE
         </div>
 
         <div class="reward-code">
@@ -602,6 +687,7 @@ function showReward(reward) {
             to our staff when you redeem
             your reward.
         </div>
+
     `;
 
 
@@ -612,28 +698,29 @@ function showReward(reward) {
         );
 
 
-    /* =================================
-       CREATE QR CODE
-    ================================= */
-
     const qrImage =
         document.getElementById(
             "rewardQR"
         );
+
 
     qrImage.src =
         "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=" +
         encodeURIComponent(
             reward.reward_token
         );
+
+
+    rewardResult.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+    });
+
 }
 
 
-/* =========================================
-   START LIFF
-========================================= */
-
 initializeLIFF();
+
 </script>
 
 </body>
