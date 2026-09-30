@@ -57,6 +57,15 @@
     >
         CLAIM MY REWARD
     </button>
+
+    <button
+    id="historyButton"
+    class="history-button"
+    type="button"
+    >
+    MY REWARDS
+    </button>
+
     <div
         id="statusMessage"
         class="status"
@@ -109,6 +118,9 @@ async function initializeLIFF() {
 
     const loginButton =
         document.getElementById("loginButton");
+    
+    const historyButton =
+    document.getElementById("historyButton");    
 
     try {
 
@@ -159,6 +171,9 @@ async function initializeLIFF() {
 
         loginButton.onclick =
             checkReward;
+        
+        historyButton.onclick =
+            loadRewardHistory;
 
     } catch (error) {
 
@@ -391,6 +406,114 @@ async function checkReward() {
             "status error";
 
         loginButton.disabled = false;
+    }
+}
+async function loadRewardHistory() {
+    const status =
+        document.getElementById("statusMessage");
+
+    const historyButton =
+        document.getElementById("historyButton");
+
+    try {
+        historyButton.disabled = true;
+
+        status.textContent =
+            "Loading your rewards...";
+
+        status.className =
+            "status checking";
+
+        if (!liff.isLoggedIn()) {
+            status.textContent =
+                "Please log in with LINE first.";
+
+            status.className =
+                "status error";
+
+            historyButton.disabled = false;
+
+            loginWithLINE();
+
+            return;
+        }
+
+        const idToken =
+            liff.getIDToken();
+
+        if (!idToken) {
+            status.textContent =
+                "Your LINE session has expired. Please log in again.";
+
+            status.className =
+                "status error";
+
+            historyButton.disabled = false;
+
+            return;
+        }
+
+        const response =
+            await fetch(
+                CLAIM_FUNCTION_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        id_token: idToken
+                    })
+                }
+            );
+
+        const result =
+            await response.json();
+
+        console.log(
+            "Reward history response:",
+            response.status,
+            result
+        );
+
+        if (
+            result.success &&
+            result.reward
+        ) {
+            status.textContent =
+                "Your reward is ready.";
+
+            status.className =
+                "status success";
+
+            showReward(result.reward);
+
+            return;
+        }
+
+        status.textContent =
+            result.error ||
+            "No reward found.";
+
+        status.className =
+            "status error";
+
+    } catch (error) {
+        console.error(
+            "Reward history error:",
+            error
+        );
+
+        status.textContent =
+            "Unable to load your reward.";
+
+        status.className =
+            "status error";
+    } finally {
+        historyButton.disabled = false;
     }
 }
 
