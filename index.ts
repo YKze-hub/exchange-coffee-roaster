@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
             new URLSearchParams({
               id_token: idToken,
               client_id:
-                "2011803432-8wUZVBDB",
+              "2011803432",
             }),
         }
       );
