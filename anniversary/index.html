@@ -126,13 +126,10 @@
          * =====================================================
          * CONFIGURATION
          * =====================================================
-         *
-         * Replace this with your actual LIFF ID.
-         *
-         * DO NOT put your LINE Channel Secret here.
          */
 
-        const LIFF_ID = "2011803432-8wUZVBDB";
+        const LIFF_ID =
+            "2011803432-8wUZVBDB";
 
 
         /*
@@ -158,8 +155,7 @@
 
 
                 /*
-                 * If the user is not logged in,
-                 * show the login/claim button.
+                 * User is not logged in.
                  */
 
                 if (!liff.isLoggedIn()) {
@@ -193,7 +189,10 @@
 
             } catch (error) {
 
-                console.error(error);
+                console.error(
+                    "LIFF initialization error:",
+                    error
+                );
 
                 status.textContent =
                     "Unable to connect to LINE. Please try again.";
@@ -225,48 +224,177 @@
 
         /*
          * =====================================================
-         * CHECK REWARD
+         * CLAIM REWARD
          * =====================================================
          *
-         * PHASE 1 ONLY
+         * 1. Get the LINE ID token.
+         * 2. Send it to Supabase Edge Function.
+         * 3. Backend verifies the token with LINE.
+         * 4. Backend gets the real LINE user ID.
+         * 5. Backend checks whether the customer
+         *    already claimed this campaign.
+         * 6. Backend creates the reward.
          *
-         * The secure reward lookup will be added in Phase 2.
          */
+
 
         async function checkReward() {
 
             const status =
                 document.getElementById("statusMessage");
 
-            status.textContent =
-                "LINE login successful.";
+            const loginButton =
+                document.getElementById("loginButton");
 
-            /*
-             * IMPORTANT:
-             *
-             * We will NOT send a LINE user ID directly
-             * to Supabase from the browser.
-             *
-             * In Phase 2:
-             *
-             * 1. Get the raw LINE ID token.
-             * 2. Send it to our backend.
-             * 3. Backend verifies it with LINE.
-             * 4. Backend obtains the real LINE user ID.
-             * 5. Backend checks the database.
-             * 6. Backend creates or returns the reward.
-             */
 
-            const idToken =
-                liff.getIDToken();
+            try {
 
-            console.log(
-                "LIFF ID token available:",
-                Boolean(idToken)
-            );
+                status.textContent =
+                    "Checking your LINE account...";
 
-            status.textContent =
-                "Your LINE account is ready. Reward claiming will be connected in Phase 2.";
+                loginButton.disabled =
+                    true;
+
+
+                /*
+                 * Get the LINE ID token.
+                 */
+
+                const idToken =
+                    liff.getIDToken();
+
+
+                if (!idToken) {
+
+                    status.textContent =
+                        "Unable to get your LINE account information.";
+
+                    loginButton.disabled =
+                        false;
+
+                    return;
+
+                }
+
+
+                /*
+                 * Send the LINE ID token
+                 * to our Supabase Edge Function.
+                 */
+
+                const response =
+                    await fetch(
+                        "https://wbjwcavloaqlsuzyskug.supabase.co/functions/v1/claim-reward",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                id_token: idToken
+                            })
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                /*
+                 * Reward successfully claimed.
+                 */
+
+                if (result.success) {
+
+                    status.textContent =
+                        "Your anniversary reward has been claimed!";
+
+                    loginButton.textContent =
+                        "REWARD CLAIMED";
+
+                    loginButton.disabled =
+                        true;
+
+
+                    console.log(
+                        "Reward:",
+                        result.reward
+                    );
+
+
+                    return;
+
+                }
+
+
+                /*
+                 * Customer already claimed.
+                 */
+
+                if (
+                    response.status === 409 &&
+                    result.error === "Already claimed"
+                ) {
+
+                    status.textContent =
+                        "You have already claimed your anniversary reward.";
+
+                    loginButton.textContent =
+                        "ALREADY CLAIMED";
+
+                    loginButton.disabled =
+                        true;
+
+
+                    document
+                        .getElementById("alreadyClaimed")
+                        .classList
+                        .remove("hidden");
+
+
+                    console.log(
+                        "Existing reward:",
+                        result.reward
+                    );
+
+
+                    return;
+
+                }
+
+
+                /*
+                 * Other error.
+                 */
+
+                status.textContent =
+                    result.error ||
+                    "Unable to claim your reward.";
+
+
+                loginButton.disabled =
+                    false;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Reward claim error:",
+                    error
+                );
+
+
+                status.textContent =
+                    "Something went wrong. Please try again.";
+
+
+                loginButton.disabled =
+                    false;
+
+            }
 
         }
 
