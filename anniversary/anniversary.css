@@ -1,339 +1,426 @@
-:root {
-    --ink: #171612;
-    --paper: #eee8dc;
-    --cream: #f7f2e8;
-    --copper: #b56f43;
-    --copper-light: #cf8a5d;
-    --steel: #777267;
-    --line: rgba(23, 22, 18, 0.15);
-
-    --serif: Georgia, "Times New Roman", serif;
-    --mono: "Courier New", monospace;
-}
-
+/* =========================================
+   RESET
+========================================= */
 
 * {
     box-sizing: border-box;
-}
-
-
-html,
-body {
     margin: 0;
     padding: 0;
 }
 
 
 body {
-    background: var(--ink);
-    color: var(--cream);
-
+    background: #eee8dc;
+    color: #2d211b;
     font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Helvetica Neue",
         Arial,
-        Helvetica,
         sans-serif;
 }
 
 
-.anniversary {
-    min-height: 100vh;
+/* =========================================
+   PAGE
+========================================= */
 
-    max-width: 760px;
-
+.anniversary-page {
+    width: 100%;
+    max-width: 620px;
     margin: 0 auto;
+    overflow: hidden;
+    background: #f5f0e7;
+}
 
-    padding:
-        70px
-        28px
-        50px;
+
+/* =========================================
+   HERO
+========================================= */
+
+.hero {
+    min-height: 680px;
+    padding: 34px 28px 70px;
+    text-align: center;
+    position: relative;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            rgba(177, 117, 72, 0.13),
+            transparent 32%
+        ),
+        #f5f0e7;
+}
+
+
+.brand {
+    font-size: 11px;
+    letter-spacing: 3px;
+    font-weight: 700;
+}
+
+
+.anniversary-date {
+    margin-top: 12px;
+
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #8b6a56;
+}
+
+
+.year-display {
+    margin-top: 70px;
 
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
+}
+
+
+.year-number {
+    font-family: Georgia, serif;
+
+    font-size: clamp(100px, 27vw, 160px);
+    line-height: 0.75;
+
+    letter-spacing: -8px;
+
+    color: #432c20;
+}
+
+
+.year-word {
+    margin-top: 18px;
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 9px;
+
+    padding-left: 9px;
+
+    color: #a4613e;
+}
+
+
+.hero h1 {
+    margin-top: 24px;
+
+    font-family: Georgia, serif;
+
+    font-size: clamp(50px, 14vw, 82px);
+    line-height: 0.86;
+
+    letter-spacing: -3px;
+}
+
+
+.small-divider {
+    margin: 34px auto 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    color: #a4613e;
+}
+
+
+.small-divider span {
+    width: 45px;
+    height: 1px;
+    background: #c9ad98;
+}
+
+
+.hero-text {
+    font-family: Georgia, serif;
+
+    font-size: 18px;
+    line-height: 1.55;
+
+    color: #49372d;
+}
+
+
+.thank-you {
+    margin-top: 12px;
+
+    font-size: 12px;
+    letter-spacing: 1.5px;
+
+    color: #8b6a56;
+}
+
+
+/* =========================================
+   REWARD SECTION
+========================================= */
+
+.reward-section {
+    padding: 0 22px 50px;
+}
+
+
+.section-label {
+    margin-bottom: 14px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 3px;
+    text-align: center;
+
+    color: #8b6a56;
+}
+
+
+.reward-card {
+    overflow: hidden;
+
+    background: #39271e;
+    color: #f8f1e6;
+
+    border-radius: 4px;
+
+    box-shadow:
+        0 18px 40px rgba(56, 39, 30, 0.18);
+}
+
+
+.reward-top {
+    display: flex;
+    justify-content: space-between;
+
+    padding: 16px 18px;
+
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+
+.reward-content {
+    padding: 44px 24px 48px;
 
     text-align: center;
 }
 
 
-/* --------------------------------
-   HEADER
--------------------------------- */
-
-.eyebrow {
-    font-family: var(--mono);
-
+.reward-intro {
     font-size: 10px;
+    letter-spacing: 4px;
 
-    letter-spacing: 0.16em;
-
-    color: var(--copper-light);
-
-    margin-bottom: 22px;
-}
-
-
-.year {
-    font-family: var(--mono);
-
-    font-size: 11px;
-
-    letter-spacing: 0.12em;
-
-    color: var(--steel);
-
-    margin-bottom: 30px;
-}
-
-
-/* --------------------------------
-   TITLE
--------------------------------- */
-
-h1 {
-    font-family: var(--serif);
-
-    font-weight: 400;
-
-    font-size:
-        clamp(52px, 12vw, 92px);
-
-    line-height: 0.92;
-
-    letter-spacing: -0.04em;
-
-    margin: 0 0 30px;
-}
-
-
-.intro {
-    max-width: 460px;
-
-    color: #c9c2b5;
-
-    font-size: 15px;
-
-    line-height: 1.75;
-
-    margin-bottom: 45px;
-}
-
-
-/* --------------------------------
-   REWARD CARD
--------------------------------- */
-
-.reward-card {
-
-    width: 100%;
-
-    max-width: 480px;
-
-    padding:
-        38px
-        28px;
-
-    border:
-        1px solid
-        rgba(181, 111, 67, 0.7);
-
-    background:
-        linear-gradient(
-            145deg,
-            #211f1a,
-            #181714
-        );
-
-    margin-bottom: 28px;
-}
-
-
-.reward-label {
-
-    font-family: var(--mono);
-
-    font-size: 9px;
-
-    letter-spacing: 0.16em;
-
-    color: var(--copper-light);
-
-    margin-bottom: 22px;
+    color: #d8b99e;
 }
 
 
 .reward-card h2 {
+    margin-top: 16px;
 
-    font-family: var(--serif);
+    font-family: Georgia, serif;
 
-    font-size: 42px;
+    font-size: clamp(46px, 12vw, 70px);
+    line-height: 0.9;
 
-    line-height: 0.95;
-
-    font-weight: 400;
-
-    margin: 0 0 24px;
-
-    letter-spacing: -0.02em;
+    letter-spacing: -3px;
 }
 
 
-.reward-card p {
+.reward-card h2 span {
+    display: block;
 
-    color: #aaa398;
+    color: #d99a70;
+}
+
+
+.coffee-line {
+    margin: 26px auto 18px;
+
+    font-size: 25px;
+}
+
+
+.reward-description {
+    max-width: 330px;
+    margin: 0 auto;
 
     font-size: 13px;
+    line-height: 1.7;
 
+    color: #d8c8bb;
+}
+
+
+.reward-footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+
+.reward-footer > div {
+    padding: 18px;
+
+    text-align: center;
+}
+
+
+.reward-footer > div + div {
+    border-left: 1px solid rgba(255,255,255,0.15);
+}
+
+
+.footer-label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    font-size: 8px;
+    letter-spacing: 2px;
+
+    color: #b99b87;
+}
+
+
+.reward-footer strong {
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+
+/* =========================================
+   CLAIM SECTION
+========================================= */
+
+.claim-section {
+    padding: 20px 28px 60px;
+
+    text-align: center;
+}
+
+
+.claim-note {
+    max-width: 310px;
+    margin: 0 auto 20px;
+
+    font-size: 13px;
     line-height: 1.6;
 
-    margin: 7px 0;
+    color: #806c5f;
 }
 
 
-.reward-card strong {
-
-    color: var(--cream);
-
-    font-weight: 500;
-}
-
-
-/* --------------------------------
-   BUTTON
--------------------------------- */
-
-.primary-button {
-
+.claim-button {
     width: 100%;
+    max-width: 360px;
 
-    max-width: 480px;
+    min-height: 58px;
 
     border: none;
+    border-radius: 100px;
 
-    background: var(--copper);
+    background: #a4613e;
+    color: #fffaf4;
 
-    color: var(--ink);
+    font-size: 13px;
+    font-weight: 700;
 
-    padding: 17px 20px;
-
-    font-family: var(--mono);
-
-    font-size: 11px;
-
-    letter-spacing: 0.1em;
+    letter-spacing: 2px;
 
     cursor: pointer;
 
+    box-shadow:
+        0 10px 25px rgba(164, 97, 62, 0.22);
+
     transition:
-        background 0.2s ease,
-        transform 0.2s ease;
+        transform 0.2s ease,
+        opacity 0.2s ease;
 }
 
 
-.primary-button:hover {
-
-    background: var(--copper-light);
-
-    transform: translateY(-1px);
+.claim-button:hover {
+    transform: translateY(-2px);
 }
 
 
-.primary-button:active {
-
-    transform: translateY(0);
+.claim-button:disabled {
+    cursor: default;
+    opacity: 0.7;
+    transform: none;
 }
 
 
-/* --------------------------------
-   STATUS
--------------------------------- */
+.claimed-button {
+    background: #59483e;
+}
+
+
+/* =========================================
+   STATUS MESSAGE
+========================================= */
 
 .status {
+    max-width: 400px;
 
-    min-height: 20px;
+    margin: 18px auto 0;
+    padding: 15px 18px;
 
-    margin:
-        16px
-        0
-        20px;
+    border-radius: 12px;
 
-    color: var(--steel);
-
-    font-family: var(--mono);
-
-    font-size: 10px;
-
+    font-size: 17px;
     line-height: 1.5;
+
+    font-weight: 600;
+
+    text-align: center;
 }
 
 
-/* --------------------------------
-   MESSAGE
--------------------------------- */
-
-.message-card {
-
-    width: 100%;
-
-    max-width: 480px;
-
-    border:
-        1px solid
-        var(--line);
-
-    padding: 30px;
-
-    background: #211f1a;
+.status.info,
+.status.connected,
+.status.checking {
+    background: #e7ded3;
+    color: #5b473b;
 }
 
 
-.message-card h2 {
+.status.success {
+    background: #e2eadc;
+    color: #3e5b38;
 
-    font-family: var(--serif);
-
-    font-weight: 400;
-
-    font-size: 28px;
-
-    margin:
-        15px
-        0
-        10px;
+    border: 1px solid #b9cdb0;
 }
 
 
-.message-card p {
+.status.error {
+    background: #f1dddd;
+    color: #7a3f3f;
 
-    color: #aaa398;
-
-    font-size: 13px;
-
-    line-height: 1.6;
+    border: 1px solid #dfbaba;
 }
 
 
-.success-mark {
+/* =========================================
+   ALREADY CLAIMED
+========================================= */
 
-    width: 42px;
+.claimed-card,
+.reward-result {
+    margin: 0 22px 55px;
+    padding: 38px 24px;
 
-    height: 42px;
+    text-align: center;
 
-    margin: 0 auto;
+    background: #fffaf3;
 
-    border-radius: 50%;
+    border: 1px solid #ded1c4;
 
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background: var(--copper);
-
-    color: var(--ink);
-
-    font-family: var(--mono);
+    border-radius: 4px;
 }
 
 
@@ -342,66 +429,228 @@ h1 {
 }
 
 
-/* --------------------------------
-   FOOTER
--------------------------------- */
+.claimed-icon,
+.reward-result-icon {
+    width: 54px;
+    height: 54px;
 
-footer {
+    margin: 0 auto 20px;
 
-    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    padding-top: 70px;
+    border-radius: 50%;
 
-    color: #615d54;
+    background: #e2eadc;
+    color: #496245;
 
-    font-family: var(--mono);
-
-    font-size: 9px;
-
-    line-height: 1.7;
-
-    letter-spacing: 0.08em;
+    font-size: 25px;
+    font-weight: 700;
 }
 
 
-/* --------------------------------
-   MOBILE
--------------------------------- */
+.claimed-label,
+.result-label {
+    font-size: 9px;
+    font-weight: 700;
 
-@media (max-width: 600px) {
+    letter-spacing: 3px;
 
-    .anniversary {
+    color: #99735d;
+}
 
-        padding:
-            48px
-            20px
-            35px;
+
+.claimed-card h2,
+.reward-result h2 {
+    margin-top: 14px;
+
+    font-family: Georgia, serif;
+
+    font-size: 34px;
+    line-height: 1;
+}
+
+
+.claimed-card > p:not(.claimed-label) {
+    margin-top: 18px;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    color: #776257;
+}
+
+
+.redeem-date {
+    margin-top: 25px;
+    padding-top: 20px;
+
+    border-top: 1px solid #e1d6ca;
+
+    font-size: 10px;
+    letter-spacing: 2px;
+
+    color: #96715d;
+}
+
+
+.redeem-date strong {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #3e3028;
+}
+
+
+/* =========================================
+   NEW REWARD RESULT
+========================================= */
+
+.result-reward {
+    margin: 28px auto 20px;
+
+    font-family: Georgia, serif;
+
+    font-size: 38px;
+    line-height: 0.9;
+
+    letter-spacing: -1px;
+
+    color: #39271e;
+}
+
+
+.result-reward span {
+    color: #a4613e;
+}
+
+
+.result-date {
+    font-size: 13px;
+    color: #776257;
+}
+
+
+.result-date strong {
+    display: block;
+
+    margin-top: 4px;
+
+    color: #39271e;
+}
+
+
+.reward-token-box {
+    margin-top: 25px;
+    padding: 17px;
+
+    background: #eee5d9;
+
+    border-radius: 8px;
+}
+
+
+.reward-token-box span {
+    display: block;
+
+    margin-bottom: 8px;
+
+    font-size: 9px;
+    letter-spacing: 2px;
+
+    color: #917463;
+}
+
+
+.reward-token-box strong {
+    display: block;
+
+    font-family: monospace;
+
+    font-size: 18px;
+    letter-spacing: 1px;
+
+    word-break: break-all;
+
+    color: #39271e;
+}
+
+
+.result-note {
+    margin-top: 17px;
+
+    font-size: 12px;
+    line-height: 1.6;
+
+    color: #887367;
+}
+
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+    padding: 45px 20px 55px;
+
+    text-align: center;
+
+    background: #39271e;
+    color: #f5eadc;
+}
+
+
+.footer-logo {
+    font-family: Georgia, serif;
+
+    font-size: 24px;
+    letter-spacing: 5px;
+}
+
+
+footer p {
+    margin-top: 7px;
+
+    font-size: 8px;
+    letter-spacing: 4px;
+
+    color: #cdb7a7;
+}
+
+
+footer span {
+    display: block;
+
+    margin-top: 22px;
+
+    font-size: 8px;
+    letter-spacing: 2px;
+
+    color: #9d8474;
+}
+
+
+/* =========================================
+   DESKTOP
+========================================= */
+
+@media (min-width: 700px) {
+
+    .anniversary-page {
+        box-shadow:
+            0 0 60px rgba(45, 33, 27, 0.12);
     }
 
-
-    h1 {
-
-        font-size: 60px;
+    .hero {
+        padding-left: 60px;
+        padding-right: 60px;
     }
 
-
-    .intro {
-
-        font-size: 14px;
-    }
-
-
-    .reward-card {
-
-        padding:
-            32px
-            20px;
-    }
-
-
-    .reward-card h2 {
-
-        font-size: 36px;
+    .reward-section {
+        padding-left: 45px;
+        padding-right: 45px;
     }
 
 }
