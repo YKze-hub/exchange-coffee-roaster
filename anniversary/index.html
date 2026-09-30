@@ -438,20 +438,23 @@ async function loadRewardHistory() {
             return;
         }
 
-        const idToken =
-            liff.getIDToken();
+        const idToken = liff.getIDToken();
 
         if (!idToken) {
             status.textContent =
-                "Your LINE session has expired. Please log in again.";
+            "Your LINE session has expired. Please log in again.";
 
             status.className =
-                "status error";
+            "status error";
 
             historyButton.disabled = false;
 
-            return;
-        }
+            liff.login({
+            redirectUri: window.location.href
+            });
+
+        return;
+}
 
         const response =
             await fetch(
@@ -472,6 +475,25 @@ async function loadRewardHistory() {
 
         const result =
             await response.json();
+        
+            if (
+            response.status === 401 &&
+    result.error === "Invalid LINE ID token"
+) {
+    status.textContent =
+        "Refreshing your LINE login...";
+
+    status.className =
+        "status checking";
+
+    liff.logout();
+
+    liff.login({
+        redirectUri: window.location.href
+    });
+
+    return;
+}
 
         console.log(
             "Reward history response:",
