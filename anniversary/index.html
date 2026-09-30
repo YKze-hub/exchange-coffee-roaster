@@ -481,86 +481,110 @@
 
 
         function showReward(reward) {
+            const reward = result.reward;
 
-            const existing =
-                document.getElementById(
-                    "rewardResult"
-                );
+    const existingReward =
 
+        document.getElementById("rewardResult");
 
-            if (existing) {
-                existing.remove();
-            }
+    if (existingReward) {
 
+        existingReward.remove();
 
-            const rewardResult =
-                document.createElement("section");
+    }
 
+    const rewardResult =
 
-            rewardResult.id =
-                "rewardResult";
+        document.createElement("div");
 
+    rewardResult.id = "rewardResult";
 
-            rewardResult.className =
-                "reward-result";
+    rewardResult.className = "reward-result";
 
+    rewardResult.innerHTML = `
 
-            rewardResult.innerHTML = `
+        <div class="reward-result-label">
 
-                <div class="reward-result-icon">
-                    ✓
-                </div>
+            ANNIVERSARY REWARD
 
-                <p class="result-label">
-                    ANNIVERSARY REWARD
-                </p>
+        </div>
 
-                <h2>
-                    YOUR REWARD<br>
-                    IS READY.
-                </h2>
+        <div class="reward-result-title">
 
-                <div class="result-reward">
-                    BUY ONE<br>
-                    <span>GET ONE</span>
-                </div>
+            YOUR REWARD IS READY.
 
-                <p class="result-date">
-                    Redeem from
-                    <strong>8 October 2026</strong>
-                </p>
+        </div>
 
-                <div class="reward-token-box">
+        <div class="reward-result-type">
 
-                    <span>
-                        YOUR REWARD CODE
-                    </span>
+            BUY ONE GET ONE
 
-                    <strong>
-                        ${reward.reward_token}
-                    </strong>
+        </div>
 
-                </div>
+        <div class="reward-result-date">
 
-                <p class="result-note">
-                    Show this reward code to our staff
-                    when you redeem your reward.
-                </p>
+            Redeem from 8 October 2026
 
-            `;
+        </div>
 
+        <div class="reward-qr">
 
-            document
-                .querySelector(".claim-section")
-                .after(rewardResult);
+            <img
 
+                id="rewardQR"
 
-            rewardResult.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-            });
+                alt="Reward QR Code"
 
-        }
+            >
+
+        </div>
+
+        <div class="reward-code-label">
+
+            REWARD CODE
+
+        </div>
+
+        <div class="reward-code">
+
+            ${reward.reward_token}
+
+        </div>
+
+        <div class="reward-instruction">
+
+            Show this QR code or reward code
+
+            to our staff when you redeem your reward.
+
+        </div>
+
+    `;
+
+    document
+
+        .querySelector(".claim-section")
+
+        .appendChild(rewardResult);
+
+    // Create QR code
+
+    const qrImage =
+
+        document.getElementById("rewardQR");
+
+    qrImage.src =
+
+        "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=" +
+
+        encodeURIComponent(
+
+            reward.reward_token
+
+        );
+
+}
+        
 
 
         initializeLIFF();
