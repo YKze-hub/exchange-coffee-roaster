@@ -1,8 +1,22 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "https://exchange-cafe.com",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
 Deno.serve(async (req) => {
   try {
-    // Only allow POST requests
+
+    // Handle browser CORS preflight request
+    if (req.method === "OPTIONS") {
+      return new Response("ok", {
+        status: 200,
+        headers: corsHeaders,
+      });
+    }
+
     if (req.method !== "POST") {
       return new Response(
         JSON.stringify({
@@ -12,25 +26,33 @@ Deno.serve(async (req) => {
         {
           status: 405,
           headers: {
+            ...corsHeaders,
             "Content-Type": "application/json",
           },
         }
       );
     }
 
-    // Supabase connection
-    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabaseUrl =
+      Deno.env.get("SUPABASE_URL")!;
 
-    const supabase = createClient(
-      supabaseUrl,
-      serviceRoleKey
-    );
+    const serviceRoleKey =
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // Read request body
-    const body = await req.json();
+    const supabase =
+      createClient(
+        supabaseUrl,
+        serviceRoleKey
+      );
 
-    const idToken = body.id_token;
+
+    // Get request body
+    const body =
+      await req.json();
+
+    const idToken =
+      body.id_token;
+
 
     if (!idToken) {
       return new Response(
@@ -41,31 +63,39 @@ Deno.serve(async (req) => {
         {
           status: 400,
           headers: {
+            ...corsHeaders,
             "Content-Type": "application/json",
           },
         }
       );
     }
 
-    // -----------------------------------------------------
-    // VERIFY LINE ID TOKEN
-    // -----------------------------------------------------
 
-    const verifyResponse = await fetch(
-      "https://api.line.me/oauth2/v2.1/verify",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: new URLSearchParams({
-          id_token: idToken,
-          client_id: "2011803432-8wUZVBDB",
-        }),
-      }
-    );
+    // Verify LINE ID token
+    const verifyResponse =
+      await fetch(
+        "https://api.line.me/oauth2/v2.1/verify",
+        {
+          method: "POST",
 
-    const lineTokenData = await verifyResponse.json();
+          headers: {
+            "Content-Type":
+              "application/x-www-form-urlencoded",
+          },
+
+          body:
+            new URLSearchParams({
+              id_token: idToken,
+              client_id:
+                "2011803432-8wUZVBDB",
+            }),
+        }
+      );
+
+
+    const lineTokenData =
+      await verifyResponse.json();
+
 
     if (!verifyResponse.ok) {
       return new Response(
@@ -76,16 +106,21 @@ Deno.serve(async (req) => {
         {
           status: 401,
           headers: {
+            ...corsHeaders,
             "Content-Type": "application/json",
           },
         }
       );
     }
 
-    // LINE user ID obtained from the verified token
-    const lineUserId = lineTokenData.sub;
 
-    const displayName = lineTokenData.name ?? null;
+    // Get real LINE user ID
+    const lineUserId =
+      lineTokenData.sub;
+
+    const displayName =
+      lineTokenData.name ?? null;
+
 
     if (!lineUserId) {
       return new Response(
@@ -96,26 +131,37 @@ Deno.serve(async (req) => {
         {
           status: 401,
           headers: {
+            ...corsHeaders,
             "Content-Type": "application/json",
           },
         }
       );
     }
 
-    // -----------------------------------------------------
-    // CAMPAIGN
-    // -----------------------------------------------------
 
-    const campaignCode = "DEV-TEST-2026";
+    // Development campaign
+    const campaignCode =
+      "DEV-TEST-2026";
 
-    const { data: campaign, error: campaignError } =
+
+    const {
+      data: campaign,
+      error: campaignError,
+    } =
       await supabase
         .from("campaigns")
         .select("*")
-        .eq("campaign_code", campaignCode)
+        .eq(
+          "campaign_code",
+          campaignCode
+        )
         .single();
 
-    if (campaignError || !campaign) {
+
+    if (
+      campaignError ||
+      !campaign
+    ) {
       return new Response(
         JSON.stringify({
           success: false,
@@ -124,226 +170,337 @@ Deno.serve(async (req) => {
         {
           status: 404,
           headers: {
-            "Content-Type": "application/json",
+            ...corsHeaders,
+            "Content-Type":
+              "application/json",
           },
         }
       );
     }
 
-    // -----------------------------------------------------
-    // CHECK CLAIM PERIOD
-    // -----------------------------------------------------
 
-    const now = new Date();
+    // Check claim period
+    const now =
+      new Date();
 
-    const claimStart = new Date(campaign.claim_start);
-    const claimEnd = new Date(campaign.claim_end);
+    const claimStart =
+      new Date(
+        campaign.claim_start
+      );
 
-    if (now < claimStart || now > claimEnd) {
+    const claimEnd =
+      new Date(
+        campaign.claim_end
+      );
+
+
+    if (
+      now < claimStart ||
+      now > claimEnd
+    ) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: "Claim period is not active",
+          error:
+            "Claim period is not active",
         }),
         {
           status: 400,
           headers: {
-            "Content-Type": "application/json",
+            ...corsHeaders,
+            "Content-Type":
+              "application/json",
           },
         }
       );
     }
 
-    // -----------------------------------------------------
-    // FIND CUSTOMER
-    // -----------------------------------------------------
 
-    let { data: customer, error: customerError } =
+    // Find customer
+    let {
+      data: customer,
+      error: customerError,
+    } =
       await supabase
         .from("customers")
         .select("*")
-        .eq("line_user_id", lineUserId)
+        .eq(
+          "line_user_id",
+          lineUserId
+        )
         .maybeSingle();
+
 
     if (customerError) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: customerError.message,
+          error:
+            customerError.message,
         }),
         {
           status: 500,
           headers: {
-            "Content-Type": "application/json",
+            ...corsHeaders,
+            "Content-Type":
+              "application/json",
           },
         }
       );
     }
 
-    // Create customer if they don't exist
+
+    // Create customer if needed
     if (!customer) {
-      const { data: newCustomer, error: createCustomerError } =
+
+      const {
+        data: newCustomer,
+        error:
+          createCustomerError,
+      } =
         await supabase
           .from("customers")
           .insert({
-            line_user_id: lineUserId,
-            display_name: displayName,
+            line_user_id:
+              lineUserId,
+
+            display_name:
+              displayName,
           })
           .select()
           .single();
 
-      if (createCustomerError) {
+
+      if (
+        createCustomerError
+      ) {
         return new Response(
           JSON.stringify({
             success: false,
-            error: createCustomerError.message,
+            error:
+              createCustomerError.message,
           }),
           {
             status: 500,
             headers: {
-              "Content-Type": "application/json",
+              ...corsHeaders,
+              "Content-Type":
+                "application/json",
             },
           }
         );
       }
 
-      customer = newCustomer;
+
+      customer =
+        newCustomer;
     }
 
-    // -----------------------------------------------------
-    // CHECK EXISTING REWARD
-    // -----------------------------------------------------
 
-    const { data: existingReward, error: existingRewardError } =
+    // Check existing reward
+    const {
+      data: existingReward,
+      error:
+        existingRewardError,
+    } =
       await supabase
         .from("rewards")
         .select("*")
-        .eq("customer_id", customer.id)
-        .eq("campaign_id", campaign.id)
+        .eq(
+          "customer_id",
+          customer.id
+        )
+        .eq(
+          "campaign_id",
+          campaign.id
+        )
         .maybeSingle();
+
 
     if (existingRewardError) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: existingRewardError.message,
+          error:
+            existingRewardError.message,
         }),
         {
           status: 500,
           headers: {
-            "Content-Type": "application/json",
+            ...corsHeaders,
+            "Content-Type":
+              "application/json",
           },
         }
       );
     }
 
+
+    // Already claimed
     if (existingReward) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: "Already claimed",
+
+          error:
+            "Already claimed",
+
           reward: {
-            reward_token: existingReward.reward_token,
-            status: existingReward.status,
-            claimed_at: existingReward.claimed_at,
+            reward_token:
+              existingReward.reward_token,
+
+            status:
+              existingReward.status,
+
+            claimed_at:
+              existingReward.claimed_at,
           },
         }),
         {
           status: 409,
           headers: {
-            "Content-Type": "application/json",
+            ...corsHeaders,
+            "Content-Type":
+              "application/json",
           },
         }
       );
     }
 
-    // -----------------------------------------------------
-    // CREATE REWARD
-    // -----------------------------------------------------
 
+    // Generate reward token
     const rewardToken =
-      `EX1-${crypto.randomUUID()
+      `EX1-${crypto
+        .randomUUID()
         .replaceAll("-", "")
         .slice(0, 12)
         .toUpperCase()}`;
 
-    const expiresAt = campaign.claim_end;
 
-    const { data: reward, error: rewardError } =
+    const expiresAt =
+      campaign.claim_end;
+
+
+    // Create reward
+    const {
+      data: reward,
+      error: rewardError,
+    } =
       await supabase
         .from("rewards")
         .insert({
-          customer_id: customer.id,
-          campaign_id: campaign.id,
-          reward_type: "BUY_ONE_GET_ONE",
-          reward_token: rewardToken,
-          status: "claimed",
-          claimed_at: now.toISOString(),
-          expires_at: expiresAt,
+          customer_id:
+            customer.id,
+
+          campaign_id:
+            campaign.id,
+
+          reward_type:
+            "BUY_ONE_GET_ONE",
+
+          reward_token:
+            rewardToken,
+
+          status:
+            "claimed",
+
+          claimed_at:
+            now.toISOString(),
+
+          expires_at:
+            expiresAt,
         })
         .select()
         .single();
 
+
     if (rewardError) {
-      // Database unique constraint protects against duplicate claims
-      if (rewardError.code === "23505") {
+
+      if (
+        rewardError.code ===
+        "23505"
+      ) {
         return new Response(
           JSON.stringify({
             success: false,
-            error: "Already claimed",
+            error:
+              "Already claimed",
           }),
           {
             status: 409,
             headers: {
-              "Content-Type": "application/json",
+              ...corsHeaders,
+              "Content-Type":
+                "application/json",
             },
           }
         );
       }
 
+
       return new Response(
         JSON.stringify({
           success: false,
-          error: rewardError.message,
+          error:
+            rewardError.message,
         }),
         {
           status: 500,
           headers: {
-            "Content-Type": "application/json",
+            ...corsHeaders,
+            "Content-Type":
+              "application/json",
           },
         }
       );
     }
 
-    // -----------------------------------------------------
-    // SUCCESS
-    // -----------------------------------------------------
 
+    // Success
     return new Response(
       JSON.stringify({
         success: true,
-        message: "Reward claimed successfully",
+
+        message:
+          "Reward claimed successfully",
+
         reward: {
-          reward_token: reward.reward_token,
-          reward_type: reward.reward_type,
-          status: reward.status,
-          claimed_at: reward.claimed_at,
-          expires_at: reward.expires_at,
+          reward_token:
+            reward.reward_token,
+
+          reward_type:
+            reward.reward_type,
+
+          status:
+            reward.status,
+
+          claimed_at:
+            reward.claimed_at,
+
+          expires_at:
+            reward.expires_at,
         },
       }),
       {
         status: 200,
+
         headers: {
-          "Content-Type": "application/json",
+          ...corsHeaders,
+          "Content-Type":
+            "application/json",
         },
       }
     );
 
+
   } catch (error) {
+
+    console.error(error);
 
     return new Response(
       JSON.stringify({
         success: false,
+
         error:
           error instanceof Error
             ? error.message
@@ -351,8 +508,11 @@ Deno.serve(async (req) => {
       }),
       {
         status: 500,
+
         headers: {
-          "Content-Type": "application/json",
+          ...corsHeaders,
+          "Content-Type":
+            "application/json",
         },
       }
     );
