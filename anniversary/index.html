@@ -704,11 +704,13 @@ function showReward(reward) {
         );
 
 
+    const staffRedeemUrl =
+        "https://exchange-cafe.com/staff/redeem/?code=" +
+        encodeURIComponent(reward.reward_token);
+
     qrImage.src =
         "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=" +
-        encodeURIComponent(
-            reward.reward_token
-        );
+        encodeURIComponent(staffRedeemUrl);
 
 
     rewardResult.scrollIntoView({
