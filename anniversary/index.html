@@ -2,10 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 <title>Exchange Coffee — 1st Anniversary</title>
-<link rel="stylesheet" href="anniversary.css">
-<script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+<link
+    rel="stylesheet"
+    href="anniversary.css"
+>
+<script
+    src="https://static.line-scdn.net/liff/edge/2/sdk.js"
+></script>
 </head>
 <body>
 <main class="anniversary-page">
@@ -75,10 +83,12 @@
 </section>
 <section class="info-section">
     <p>
-        Redemption starts <strong>8 October 2026</strong>.
+        Redemption starts
+        <strong>8 October 2026</strong>.
     </p>
     <p>
-        Show your reward QR code or reward code to our staff.
+        Show your reward QR code or reward code
+        to our staff.
     </p>
 </section>
 </main>
@@ -87,6 +97,9 @@ const LIFF_ID =
     "2011803432-8wUZVBDB";
 const CLAIM_FUNCTION_URL =
     "https://wbjwcavloaqlsuzyskug.supabase.co/functions/v1/claim-reward";
+/* =========================================
+   INITIALIZE LIFF
+========================================= */
 async function initializeLIFF() {
     const status =
         document.getElementById("statusMessage");
@@ -100,6 +113,12 @@ async function initializeLIFF() {
         await liff.init({
             liffId: LIFF_ID
         });
+        console.log(
+            "LIFF initialized"
+        );
+        /* =================================
+           USER IS NOT LOGGED IN
+        ================================= */
         if (!liff.isLoggedIn()) {
             status.textContent =
                 "Please log in with LINE to claim your reward.";
@@ -111,6 +130,9 @@ async function initializeLIFF() {
                 loginWithLINE;
             return;
         }
+        /* =================================
+           USER IS LOGGED IN
+        ================================= */
         status.textContent =
             "You're connected with LINE.";
         status.className =
@@ -131,14 +153,22 @@ async function initializeLIFF() {
             "status error";
     }
 }
+/* =========================================
+   LINE LOGIN
+========================================= */
 function loginWithLINE() {
-    if (!liff.isLoggedIn()) {
-        liff.login({
-            redirectUri:
-                window.location.href
-        });
+    if (liff.isLoggedIn()) {
+        checkReward();
+        return;
     }
+    liff.login({
+        redirectUri:
+            window.location.href
+    });
 }
+/* =========================================
+   CLAIM REWARD
+========================================= */
 async function checkReward() {
     const status =
         document.getElementById("statusMessage");
@@ -151,6 +181,9 @@ async function checkReward() {
             "status checking";
         loginButton.disabled =
             true;
+        /* =================================
+           GET FRESH LINE ID TOKEN
+        ================================= */
         const idToken =
             liff.getIDToken();
         console.log(
@@ -166,6 +199,9 @@ async function checkReward() {
                 false;
             return;
         }
+        /* =================================
+           SEND TOKEN TO SUPABASE
+        ================================= */
         const response =
             await fetch(
                 CLAIM_FUNCTION_URL,
@@ -188,6 +224,9 @@ async function checkReward() {
             response.status,
             result
         );
+        /* =================================
+           SUCCESS
+        ================================= */
         if (result.success) {
             status.textContent =
                 "Your anniversary reward has been claimed!";
@@ -205,6 +244,9 @@ async function checkReward() {
             );
             return;
         }
+        /* =================================
+           ALREADY CLAIMED
+        ================================= */
         if (
             response.status === 409 &&
             result.error === "Already claimed"
@@ -226,10 +268,21 @@ async function checkReward() {
                 .remove("hidden");
             return;
         }
-        status.textContent =
-            result.line_error?.error_description ||
-            result.error ||
-            "Unable to claim your reward.";
+        /* =================================
+           LINE TOKEN ERROR
+        ================================= */
+        if (
+            result.line_error &&
+            result.line_error.error_description
+        ) {
+            status.textContent =
+                result.line_error.error_description;
+        }
+        else {
+            status.textContent =
+                result.error ||
+                "Unable to claim your reward.";
+        }
         status.className =
             "status error";
         loginButton.disabled =
@@ -248,6 +301,9 @@ async function checkReward() {
             false;
     }
 }
+/* =========================================
+   SHOW REWARD
+========================================= */
 function showReward(reward) {
     const existingReward =
         document.getElementById(
@@ -295,7 +351,12 @@ function showReward(reward) {
     `;
     document
         .querySelector(".claim-section")
-        .appendChild(rewardResult);
+        .appendChild(
+            rewardResult
+        );
+    /* =================================
+       CREATE QR CODE
+    ================================= */
     const qrImage =
         document.getElementById(
             "rewardQR"
@@ -306,6 +367,9 @@ function showReward(reward) {
             reward.reward_token
         );
 }
+/* =========================================
+   START LIFF
+========================================= */
 initializeLIFF();
 </script>
 </body>
