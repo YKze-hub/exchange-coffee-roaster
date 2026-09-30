@@ -227,6 +227,7 @@ async function checkReward() {
             return;
         }
         status.textContent =
+            result.line_error?.error_description ||
             result.error ||
             "Unable to claim your reward.";
         status.className =
